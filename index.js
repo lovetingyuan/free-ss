@@ -140,7 +140,7 @@ function startSsClient() {
     console.log("starting ss client...");
 
     var exeClient = () => {
-        console.log('ss client has started...');
+        console.log('ss client has started, you can browse now...');
         var process = require('child_process');
         process.execFile(clientFilePath,
             function(error, stdout, stderr) {
