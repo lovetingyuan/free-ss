@@ -1,36 +1,11 @@
+/*
+	tingyuan 2015 12
+	感谢 http://www.ishadowsocks.com/ 提供的免费账号
+	自由无价
+*/
 //默认配置
 var defaultConfig = {
-    "configs": [{
-        "server": "103.11.143.189",
-        "server_port": 14599,
-        "password": "QduJLDXg",
-        "method": "chacha20",
-        "remarks": "新加坡电信优化节点"
-    }, {
-        "server": "free-b-us-ejd7.ssnx.cf",
-        "server_port": 14599,
-        "password": "QduJLDXg",
-        "method": "chacha20",
-        "remarks": "Free B西雅图"
-    }, {
-        "server": "free-b-jp-b3v1.ssnx.cf",
-        "server_port": 14599,
-        "password": "QduJLDXg",
-        "method": "rc4-md5",
-        "remarks": "免费B-日本-新进"
-    }, {
-        "server": "free-b-us-ebsw.ssnx.cf",
-        "server_port": 14599,
-        "password": "QduJLDXg",
-        "method": "rc4-md5",
-        "remarks": "免费-B计划-美国节点"
-    }, {
-        "server": "free-b-us-ec3e.ssnx.cf",
-        "server_port": 14599,
-        "password": "QduJLDXg",
-        "method": "rc4-md5",
-        "remarks": "洛杉矶免费节点"
-    }],
+    "configs": [],
     "strategy": null,
     "index": 5,
     "global": false,
@@ -64,8 +39,8 @@ function download(url, callback) {
 }
 
 var fs = require('fs');
-var dirName = "Shadowsocks";
-var clientName = "Shadowsocks.exe";
+var dirName = "shadowsocks";
+var clientName = "shadowsocks.exe";
 var clientFilePath = dirName + "/" + clientName;
 var configFilePath = dirName + "/gui-config.json";
 
@@ -190,9 +165,7 @@ function startSsClient() {
                 });
                 lastversion = $(".release-header").first().find('a').first().text();
                 downloadlink = 'https://github.com' + $(".release-downloads").first().find('a').first().attr('href');
-                console.log(downloadlink);
                 readConfig(function(ssconfig) {
-                    console.log("------------" + lastversion + ":" + ssconfig.version);
                     if (lastversion !== ssconfig.version) {
                         if (exists) {
                             console.log('ss client is outofdate, start to update client...');
