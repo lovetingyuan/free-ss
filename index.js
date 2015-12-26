@@ -45,15 +45,11 @@ var defaultConfig = {
 // Utility function that downloads a URL and invokes
 // callback with the data.
 function download(url, callback) {
-<<<<<<< HEAD
     var protocal = url.substring(0, url.indexOf(':')).toLowerCase();
     if (protocal !== 'http' && protocal !== 'https') {
         protocal = 'http';
     }
     var http = require(protocal);
-=======
-    var http = require("http");
->>>>>>> c4effa45de1482a54cfe7c0e8672e2832d14b6f2
     http.get(url, function(res) {
         var data = "";
         res.on('data', function(chunk) {
@@ -73,26 +69,28 @@ var clientName = "Shadowsocks.exe";
 var clientFilePath = dirName + "/" + clientName;
 var configFilePath = dirName + "/gui-config.json";
 
-fs.exists(dirName, function(exists) {
-    if (!exists) {
-        fs.mkdirSync(dirName);
-    }
-});
+buildConfigDir();
 
-fs.exists(configFilePath, function(exist) {
-    if (!exist) {
-<<<<<<< HEAD
-        writeConfig(JSON.stringify(defaultConfig, null, 2), updateConfigFile);
-=======
-        fs.writeFile(configFilePath,
-            JSON.stringify(defaultConfig, null, 2), 'utf8', updateConfigFile);
->>>>>>> c4effa45de1482a54cfe7c0e8672e2832d14b6f2
-    } else {
-        updateConfigFile();
-    }
-});
+function buildConfigDir() {
+    var buildConfigFile = () => {
+        fs.exists(configFilePath, function(exist) {
+            if (!exist) {
+                writeConfig(JSON.stringify(defaultConfig, null, 4), updateConfigFile);
+            } else {
+                updateConfigFile();
+            }
+        });
+    };
 
-<<<<<<< HEAD
+    fs.exists(dirName, function(exists) {
+        if (exists) {
+            buildConfigFile();
+        } else {
+            fs.mkdir(dirName, buildConfigFile);
+        }
+    });
+}
+
 function readConfig(callback) {
     fs.readFile(configFilePath, 'utf8', function(err, data) {
         if (err) {
@@ -112,15 +110,9 @@ function writeConfig(content, callback) {
     fs.writeFile(configFilePath, content, 'utf8', callback);
 }
 
-
-function updateConfigFile() {
-    download("http://www.ishadowsocks.com/", function(data) {
-        var accountInfo = [];
-=======
 function updateConfigFile() {
     var accountInfo = [];
     download("http://www.ishadowsocks.com/", function(data) {
->>>>>>> c4effa45de1482a54cfe7c0e8672e2832d14b6f2
         var cheerio = require("cheerio");
         if (data) {
             var $ = cheerio.load(data, {
@@ -143,7 +135,7 @@ function updateConfigFile() {
                     oneaccount = {};
                 }
             });
-<<<<<<< HEAD
+
             readConfig(function(ssconfig) {
                 for (var i = 0; i < ssconfig.configs.length; i++) {
                     if (ssconfig.configs[i].remarks === 'ishadowsocks') {
@@ -156,32 +148,6 @@ function updateConfigFile() {
                     ssconfig.configs.push(element);
                 });
                 writeConfig(JSON.stringify(ssconfig, null, 4), startSsClient);
-=======
-
-            fs.readFile(configFilePath, 'utf8', function(err, data) {
-                if (err) {
-                    console.log('readfile error');
-                } else {
-                    try {
-                        var ssconfig = JSON.parse(data);
-                        for (var i = 0; i < ssconfig.configs.length; i++) {
-                            if (ssconfig.configs[i].remarks === 'ishadowsocks') {
-                                ssconfig.configs.splice(i, 1);
-                                i--;
-                            }
-                        }
-                        var usingIndex = ssconfig.configs.length;
-                        accountInfo.forEach(function(element, index, array) {
-                            ssconfig.configs.push(element);
-                        });
-                        ssconfig.index = usingIndex;
-                        fs.writeFile(configFilePath,
-                            JSON.stringify(ssconfig, null, 4), 'utf8', startSsClient);
-                    } catch (error) {
-                        console.log('parse json error');
-                    }
-                }
->>>>>>> c4effa45de1482a54cfe7c0e8672e2832d14b6f2
             });
         } else {
             console.log("download error");
@@ -197,7 +163,6 @@ function startSsClient() {
         var process = require('child_process');
         process.execFile(clientFilePath,
             function(error, stdout, stderr) {
-<<<<<<< HEAD
                 console.log("you have closed ss client.....");
             }
         );
@@ -213,7 +178,7 @@ function startSsClient() {
             .rename(clientName)
             .dest(dirName)
             .run(func);
-    }
+    };
     fs.exists(clientFilePath, function(exists) {
         download("https://github.com/shadowsocks/shadowsocks-windows/releases/", function(data) {
             var cheerio = require("cheerio");
@@ -249,24 +214,5 @@ function startSsClient() {
                 console.log("fail to get version info");
             }
         });
-=======
-                console.log("you have closed this.....");
-            }
-        );
-    };
-    fs.exists(clientFilePath, function(exists) {
-        if (exists) {
-            exeClient();
-        } else {
-            console.log('no ss client, start to download client...');
-            var Download = require('download');
-            new Download({
-                    mode: '777'
-                }).get('http://tingyuan.me/fq/Shadowsocks.exe')
-                .rename("Shadowsocks.exe")
-                .dest(dirName)
-                .run(exeClient);
-        }
->>>>>>> c4effa45de1482a54cfe7c0e8672e2832d14b6f2
     });
 }
