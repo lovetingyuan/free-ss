@@ -17,6 +17,39 @@ var defaultConfig = {
     "useOnlinePac": false,
     "availabilityStatistics": false
 };
+
+var fs = require('fs');
+var dirName = "shadowsocks";
+var clientName = "shadowsocks.exe";
+var clientFilePath = dirName + "/" + clientName;
+var configFilePath = dirName + "/gui-config.json";
+
+try {
+	/* 检查用户是否安装依赖 */
+    if (require('cheerio') && require('download')) {
+        buildConfigDir();
+    }
+} catch (e) {
+    if (e && e.code && e.code.toUpperCase() === 'MODULE_NOT_FOUND') {
+        var process = require('child_process');
+        console.log('start to install modules, please wait...');
+        process.exec('npm install',
+            function(error, stdout, stderr) {
+                if (error === null) {
+                    console.log("install successfully!");
+                    buildConfigDir();
+                } else {
+                	console.log('install failed...try again...');
+                	return;
+                }
+            }
+        );
+    } else {
+        console.log('sorry, failed with unknown reason...');
+        return;
+    }
+}
+
 // Utility function that downloads a URL and invokes
 // callback with the data.
 function download(url, callback) {
@@ -37,14 +70,6 @@ function download(url, callback) {
         callback(null);
     });
 }
-
-var fs = require('fs');
-var dirName = "shadowsocks";
-var clientName = "shadowsocks.exe";
-var clientFilePath = dirName + "/" + clientName;
-var configFilePath = dirName + "/gui-config.json";
-
-buildConfigDir();
 
 function buildConfigDir() {
     var buildConfigFile = () => {
