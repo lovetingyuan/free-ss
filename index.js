@@ -1,9 +1,12 @@
 /*
-	tingyuan 2015 12
-	感谢 http://www.ishadowsocks.com/ 提供的免费账号
-	自由无价
+    tingyuan 2015 12
+    感谢 http://www.ishadowsocks.com/ 提供的免费账号
+    自由无价
+    https://github.com/lovetingyuan/fq
 */
 //默认配置
+"use strict";
+
 var defaultConfig = {
     "configs": [],
     "strategy": null,
@@ -24,29 +27,38 @@ var clientName = "shadowsocks.exe";
 var clientFilePath = dirName + "/" + clientName;
 var configFilePath = dirName + "/gui-config.json";
 
-try {
-	/* 检查用户是否安装依赖 */
-    if (require('cheerio') && require('download')) {
-        buildConfigDir();
-    }
-} catch (e) {
-    if (e && e.code && e.code.toUpperCase() === 'MODULE_NOT_FOUND') {
-        var process = require('child_process');
-        console.log('start to install modules, please wait...');
-        process.exec('npm install',
-            function(error, stdout, stderr) {
-                if (error === null) {
-                    console.log("install successfully!");
-                    buildConfigDir();
-                } else {
-                	console.log('install failed...try again...');
-                	return;
+start();
+
+function tyfq() {
+    start();
+}
+
+function start() {
+
+    try {
+        /* 检查用户是否安装依赖 */
+        if (require('cheerio') && require('download')) {
+            buildConfigDir();
+        }
+    } catch (e) {
+        if (e && e.code && e.code.toUpperCase() === 'MODULE_NOT_FOUND') {
+            var process = require('child_process');
+            console.log('start to install modules, please wait...');
+            process.exec('npm install',
+                function(error, stdout, stderr) {
+                    if (error === null) {
+                        console.log("install successfully!");
+                        buildConfigDir();
+                    } else {
+                        console.log('install failed...try again...');
+                        return;
+                    }
                 }
-            }
-        );
-    } else {
-        console.log('sorry, failed with unknown reason...');
-        return;
+            );
+        } else {
+            console.log('sorry, failed with unknown reason...');
+            return;
+        }
     }
 }
 
@@ -214,3 +226,5 @@ function startSsClient() {
         });
     });
 }
+
+exports.tyfq = tyfq;
