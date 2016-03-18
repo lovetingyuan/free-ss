@@ -1,4 +1,4 @@
-#### 使用node配合ss客户端实现fq
+#### 使用node配合ss客户端实现fq （目前只支持windows用户）
 
 **使用方法：**
 * 首先安装 `nodejs`，访问 https://nodejs.org/en/ 下载安装即可
