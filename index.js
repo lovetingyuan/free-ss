@@ -1,14 +1,10 @@
 /*
-<<<<<<< HEAD
+
     tingyuan 2015 12
     感谢 http://www.ishadowsocks.com/ 提供的免费账号
     自由无价
     https://github.com/lovetingyuan/fq
-=======
-	tingyuan 2015 12
-	感谢 http://www.ishadowsocks.net/ 提供的免费账号
-	自由无价
->>>>>>> a29b1a34ef78ad15be0ac9318e33287979fa056f
+
 */
 //默认配置
 "use strict";
@@ -16,7 +12,7 @@
 var defaultConfig = {
     "configs": [],
     "strategy": null,
-    "index": 5,
+    "index": 0,
     "global": false,
     "enabled": true,
     "shareOverLan": false,
@@ -24,7 +20,9 @@ var defaultConfig = {
     "localPort": 1080,
     "pacUrl": null,
     "useOnlinePac": false,
-    "availabilityStatistics": false
+    "availabilityStatistics": false,
+    "autoCheckUpdate": false,
+    "logViewer": null
 };
 
 var fs = require('fs');
@@ -96,29 +94,28 @@ function getLatestDownloadLink(githubPageData) {
     var $ = cheerio.load(githubPageData, {
         decodeEntities: false
     });
-    return $("ul.release-downloads a").prop('href');
+    return "https://github.com" + $("ul.release-downloads a").attr('href');
 }
 
 /**
  * 初始化目录
  * @author tingyuan
  * @date   2016-03-18
- * @param  {Function} callback      初始化目录后的回调函数
  */
-function buildConfigDir(callback) {
+function buildConfigDir() {
     var fs = require('fs');
-    var buildConfigFile = (_callback) => {
+    var buildConfigFile = () => {
         if (has(configFilePath, "file")) {
-            _callback();
+            updateConfigFile();
         } else {
-            writeJson(configFilePath, JSON.stringify(defaultConfig, null, 4), _callback);
+            writeJson(configFilePath, JSON.stringify(defaultConfig, null, 4), updateConfigFile);
         }
     };
     if (has(dirName, "dir")) {
-        buildConfigFile(callback);
+        buildConfigFile();
     } else {
         fs.mkdir(dirName, function() {
-            buildConfigFile(callback);
+            buildConfigFile();
         });
     }
 }
@@ -130,15 +127,15 @@ function buildConfigDir(callback) {
  */
 function readJson(jsonPath, callback) {
     var fs = require('fs');
-    fs.readFile(jsonPath, 'utf8', function(err, data) {
+    fs.readFile(jsonPath, 'utf8', function(err, content) {
         if (err) {
             console.log('read json file error');
         } else {
             try {
-                var jsonObj = JSON.parse(data);
+                var jsonObj = JSON.parse(content);
                 callback(jsonObj);
             } catch (e) {
-                console.log('fail to parse json file');
+                console.log('fail to parse json file ' + e);
             }
         }
     });
@@ -175,21 +172,21 @@ function writeJson(path, content, callback) {
  */
 function getFreeAccount(freePageData) {
     var cheerio = require("cheerio");
-    var $ = cheerio.load(data, {
+    var $ = cheerio.load(freePageData, {
         decodeEntities: false
     });
     var $targets = $("#free h4");
     var accountInfo = [];
-    var oneAccount;
+    var oneAccount = {};
     var keys = ['server', 'server_port', 'password', 'method', 'remarks'];
     $targets.each(function(index, ele) {
-        oneAccount = {};
         if (index % 6 < 4) {
-            oneaccount[keys[index % 6]] = $(ele).text().split(":")[1];
+            oneAccount[keys[index % 6]] = $(ele).text().split(":")[1];
         } else if (index % 6 === 4) {
-            oneaccount[keys[4]] = 'ishadowsocks';
+            oneAccount[keys[4]] = 'ishadowsocks';
         } else {
             accountInfo.push(oneAccount);
+            oneAccount = {};
         }
     });
     var accountNum = accountInfo.length;
@@ -197,25 +194,32 @@ function getFreeAccount(freePageData) {
         console.log("there is some errors happened");
         return;
     }
-    for (var i = 0; i < accountNum; i++) {
-        for (var j = 0; j < keys.length; j++) {
+    var i, j;
+    for (i = 0; i < accountNum; i++) {
+        for (j = 0; j < keys.length; j++) {
             if (!accountInfo[i][keys[j]]) {
                 console.log("there is some errors happened");
                 return;
             }
         }
     }
+    var port;
+    for(i = 0; i < accountInfo.length; i++) {
+        port = accountInfo[i]['server_port'];
+        accountInfo[i]['server_port'] = parseInt(port, 10);
+        accountInfo[i]['auth'] = false;
+    }
     return accountInfo;
 }
 
 function updateConfigFile() {
-    grabUrl("http://www.ishadowsocks.net/", function(data) {
-        if (!data) {
+    grabUrl("http://www.ishadowsocks.net/", function(_data) {
+        if (!_data) {
             console.log("fail to get ss account");
             return;
         }
         readJson(configFilePath, function(jsonObj) {
-            jsonObj.configs = getFreeAccount(data);
+            jsonObj.configs = getFreeAccount(_data);
             writeJson(configFilePath, jsonObj, startSsClient);
         });
     });
@@ -278,10 +282,9 @@ function startExeFile(filepath, callback) {
 }
 
 
-
 function startSsClient() {
     console.log("starting ss client...");
-    download("https://github.com/shadowsocks/shadowsocks-windows/releases/", function(data) {
+    grabUrl("https://github.com/shadowsocks/shadowsocks-windows/releases/", function(data) {
         if (!data) {
             console.log("fail to get client page data");
             return;
@@ -290,7 +293,7 @@ function startSsClient() {
         var downloadLink = getLatestDownloadLink(data);
         var updateVersion = (config, callback) => {
             config.version = latestVersion;
-            writeConfig(configFilePath, JSON.stringify(config, null, 4), callback);
+            writeJson(configFilePath, JSON.stringify(config, null, 4), callback);
         };
         var startClient = () => {
             startExeFile(clientFilePath, function() {

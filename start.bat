@@ -1,3 +1,2 @@
-node index
+node index 
 
-echo 'please wait...'
