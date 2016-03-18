@@ -99,25 +99,28 @@ function getLatestDownloadLink(githubPageData) {
     return $("ul.release-downloads a").prop('href');
 }
 
-function buildConfigDir() {
+/**
+ * 初始化目录
+ * @author tingyuan
+ * @date   2016-03-18
+ * @param  {Function} callback      初始化目录后的回调函数
+ */
+function buildConfigDir(callback) {
     var fs = require('fs');
-    var buildConfigFile = () => {
-        fs.exists(configFilePath, function(exist) {
-            if (!exist) {
-                writeJson(configFilePath, JSON.stringify(defaultConfig, null, 4), updateConfigFile);
-            } else {
-                updateConfigFile();
-            }
-        });
-    };
-
-    fs.exists(dirName, function(exists) {
-        if (exists) {
-            buildConfigFile();
+    var buildConfigFile = (_callback) => {
+        if (has(configFilePath, "file")) {
+            _callback();
         } else {
-            fs.mkdir(dirName, buildConfigFile);
+            writeJson(configFilePath, JSON.stringify(defaultConfig, null, 4), _callback);
         }
-    });
+    };
+    if (has(dirName, "dir")) {
+        buildConfigFile(callback);
+    } else {
+        fs.mkdir(dirName, function() {
+            buildConfigFile(callback);
+        });
+    }
 }
 
 /**
@@ -218,6 +221,14 @@ function updateConfigFile() {
     });
 }
 
+/**
+ * 下载文件至指定目录
+ * @date   2016-03-18
+ * @param  {string}   path          存储路径
+ * @param  {string}   name          文件名
+ * @param  {string}   link          下载地址
+ * @param  {Function} callback      下载完成后执行的方法
+ */
 function downloadFile(path, name, link, callback) {
     var Download = require('download');
     new Download({
@@ -229,43 +240,86 @@ function downloadFile(path, name, link, callback) {
         .run(callback);
 }
 
+/**
+ * 判断有没有那个目录或文件
+ * @param  {string}  filepath 文件或文件夹的路径
+ * @param  {string}  mode     可取'file'或者'dir'，指定类型，可以为空，此时代表文件或目录均可
+ * @return {Boolean}          true代表存在，否则代表不存在
+ */
+function has(filepath, mode) {
+    var stat;
+    if (mode === 'file') {
+        try {
+            stat = fs.statSync(filepath);
+            return stat.isFile();
+        } catch (e) {
+            return false;
+        }
+    } else if (mode === 'dir') {
+        try {
+            stat = fs.statSync(filepath);
+            return stat.isDirectory();
+        } catch (e) {
+            return false;
+        }
+    } else {
+        try {
+            fs.statSync(filepath);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+}
+
 function startExeFile(filepath, callback) {
     var child_process = require('child_process');
     child_process.execFile(filepath, callback);
 }
 
+
+
 function startSsClient() {
     console.log("starting ss client...");
-
-    fs.exists(clientFilePath, function(exists) {
-        download("https://github.com/shadowsocks/shadowsocks-windows/releases/", function(data) {
-            if (!data) {
-                console.log("fail to get client page data");
+    download("https://github.com/shadowsocks/shadowsocks-windows/releases/", function(data) {
+        if (!data) {
+            console.log("fail to get client page data");
+            return;
+        }
+        var latestVersion = getLatestVersion(data);
+        var downloadLink = getLatestDownloadLink(data);
+        var updateVersion = (config, callback) => {
+            config.version = latestVersion;
+            writeConfig(configFilePath, JSON.stringify(config, null, 4), callback);
+        };
+        var startClient = () => {
+            startExeFile(clientFilePath, function() {
+                console.log("you have closed ss client...");
                 return;
-            }
-            var latestVersion = getLatestVersion(data);
-            var downloadLink = getLatestDownloadLink(data);
-
-            readJson(configFilePath, function(ssconfig) {
-                if (lastversion != ssconfig.version) {
-                    if (exists) {
-                        console.log('ss client is outofdate, start to update client...');
-                    } else {
-                        console.log('no ss client, start to download client...');
-                    }
-                    ssconfig.version = lastversion;
-                    writeConfig(configFilePath, JSON.stringify(ssconfig, null, 4), function() {
-                        downloadClient(downloadlink, exeClient);
-                    });
-                } else if (!exists) {
-                    console.log('no ss client, start to download client...');
-                    downloadClient(downloadlink, exeClient);
-                } else {
-                    exeClient();
-                }
             });
+            setTimeout(function() {
+                console.log("ss client has started, you can browse now...");
+            });
+        };
+        var downloadClient = (config) => {
+            console.log('downloading ss client, please wait...');
+            downloadFile(dirName, clientName, downloadLink, function() {
+                updateVersion(config, startClient);
+            });
+        };
+
+        readJson(configFilePath, function(ssconfig) {
+            if (has(clientFilePath, "file")) {
+                if (latestVersion != ssconfig.version) {
+                    console.log('ss client is outofdate, start to update client...');
+                    downloadClient(ssconfig);
+                } else {
+                    startClient();
+                }
+            } else {
+                console.log('no ss client, start to download client...');
+                downloadClient(ssconfig);
+            }
         });
     });
 }
-
-exports.tyfq = tyfq;
