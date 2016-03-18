@@ -1,14 +1,14 @@
 /*
 
     tingyuan 2015 12
-    感谢 http://www.ishadowsocks.com/ 提供的免费账号
+    感谢 http://www.ishadowsocks.net/ 提供的免费账号
     自由无价
     https://github.com/lovetingyuan/fq
 
 */
-//默认配置
 "use strict";
 
+//默认配置
 var defaultConfig = {
     "configs": [],
     "strategy": null,
@@ -25,7 +25,6 @@ var defaultConfig = {
     "logViewer": null
 };
 
-var fs = require('fs');
 var dirName = "shadowsocks";
 var clientName = "shadowsocks.exe";
 var clientFilePath = dirName + "/" + clientName;
@@ -151,7 +150,7 @@ function writeJson(path, content, callback) {
     var fs = require('fs');
     if (typeof content === 'object') {
         try {
-            content = JSON.stringify(content);
+            content = JSON.stringify(content, null, 4);
             fs.writeFile(path, content, 'utf8', callback);
         } catch (e) {
             console.log("invalid json string: " + e.toString());
@@ -204,7 +203,7 @@ function getFreeAccount(freePageData) {
         }
     }
     var port;
-    for(i = 0; i < accountInfo.length; i++) {
+    for (i = 0; i < accountInfo.length; i++) {
         port = accountInfo[i]['server_port'];
         accountInfo[i]['server_port'] = parseInt(port, 10);
         accountInfo[i]['auth'] = false;
@@ -251,7 +250,7 @@ function downloadFile(path, name, link, callback) {
  * @return {Boolean}          true代表存在，否则代表不存在
  */
 function has(filepath, mode) {
-    var stat;
+    var stat, fs = require('fs');
     if (mode === 'file') {
         try {
             stat = fs.statSync(filepath);
@@ -281,7 +280,6 @@ function startExeFile(filepath, callback) {
     child_process.execFile(filepath, callback);
 }
 
-
 function startSsClient() {
     console.log("starting ss client...");
     grabUrl("https://github.com/shadowsocks/shadowsocks-windows/releases/", function(data) {
@@ -291,10 +289,7 @@ function startSsClient() {
         }
         var latestVersion = getLatestVersion(data);
         var downloadLink = getLatestDownloadLink(data);
-        var updateVersion = (config, callback) => {
-            config.version = latestVersion;
-            writeJson(configFilePath, JSON.stringify(config, null, 4), callback);
-        };
+
         var startClient = () => {
             startExeFile(clientFilePath, function() {
                 console.log("you have closed ss client...");
@@ -307,7 +302,9 @@ function startSsClient() {
         var downloadClient = (config) => {
             console.log('downloading ss client, please wait...');
             downloadFile(dirName, clientName, downloadLink, function() {
-                updateVersion(config, startClient);
+                console.log("download successfully");
+                config.version = latestVersion;
+                writeJson(configFilePath, JSON.stringify(config, null, 4), startClient);
             });
         };
 
