@@ -21,7 +21,7 @@ var defaultConfig = {
     "pacUrl": null,
     "useOnlinePac": false,
     "availabilityStatistics": false,
-    "autoCheckUpdate": false,
+    "autoCheckUpdate": true,
     "logViewer": null
 };
 
