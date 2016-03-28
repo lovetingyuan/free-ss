@@ -9,6 +9,8 @@
 "use strict";
 
 function init() {
+
+    //默认配置
     var defaultConfig = {
         "configs": [],
         "strategy": null,
@@ -21,7 +23,7 @@ function init() {
         "pacUrl": null,
         "useOnlinePac": false,
         "availabilityStatistics": false,
-        "autoCheckUpdate": false,
+        "autoCheckUpdate": true,
         "logViewer": null
     };
 
@@ -39,7 +41,7 @@ function init() {
     }
     console.log("开启科学上网...");
     account.getAccountInfo(function(accountInfo, index) {
-        if(index === null) {
+        if (index === null) {
             console.log("抱歉，现在可能没有可用的账户...");
         }
         account.updateAccountInfo(defaultConfig, accountInfo, index, configPath);
