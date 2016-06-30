@@ -1,26 +1,33 @@
 {
-  "name": "tyfq",
-  "version": "1.0.0",
-  "description": "fq",
+  "name": "freess",
+  "version": "1.0.2",
+  "description": "使用shadowsocks和免费的账号来翻墙，使用0配置，点击就可科学上网",
   "main": "index.js",
+  "dependencies": {
+    "download": "^5.0.2"
+  },
+  "devDependencies": {},
   "scripts": {
-    "start": "node index"
+    "test": "node index"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/lovetingyuan/fq.git"
+    "url": "git+https://github.com/lovetingyuan/fq.git"
   },
   "keywords": [
-    "fq"
+    "shadowsocks",
+    "nodejs",
+    "fanqiang",
+    "翻墙",
+    "free"
   ],
-  "author": "tingyuan",
+  "author": "tingyuan (1932294867@qq.com)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/lovetingyuan/fq/issues"
   },
   "homepage": "https://github.com/lovetingyuan/fq#readme",
-  "dependencies": {
-    "cheerio": "^0.19.0",
-    "download": "^4.4.3"
+  "bin": {
+    "ss": "./index.js"
   }
 }
