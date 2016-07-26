@@ -1,11 +1,9 @@
 {
   "name": "freess",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "使用shadowsocks和免费的账号来翻墙，使用0配置，点击就可科学上网",
   "main": "index.js",
-  "dependencies": {
-    "download": "^5.0.2"
-  },
+  "dependencies": {},
   "devDependencies": {},
   "scripts": {
     "test": "node index"
@@ -19,15 +17,16 @@
     "nodejs",
     "fanqiang",
     "翻墙",
-    "free"
+    "free",
+    "fq"
   ],
-  "author": "tingyuan (1932294867@qq.com)",
+  "author": "tingyuan <1932294867@qq.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/lovetingyuan/fq/issues"
   },
   "homepage": "https://github.com/lovetingyuan/fq#readme",
   "bin": {
-    "ss": "./index.js"
+    "ss": "./bin/start"
   }
 }

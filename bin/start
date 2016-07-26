@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /*
     tingyuan 2015 12
-    感谢 http://www.ishadowsocks.org/ 提供的免费账号
+    感谢 http://www.ishadowsocks.net/ 提供的免费账号
     自由无价
     https://github.com/lovetingyuan/fq
 */
 'use strict';
-require('./lib/init')();
+require('../lib/init')();
