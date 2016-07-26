@@ -1,6 +1,10 @@
 {
   "name": "freess",
+<<<<<<< HEAD
   "version": "1.2.1",
+=======
+  "version": "1.0.6",
+>>>>>>> a307d23d48c89ddbd41b095dbeca8079e9900f7e
   "description": "使用shadowsocks和免费的账号来翻墙，使用0配置，点击就可科学上网",
   "main": "index.js",
   "dependencies": {},
