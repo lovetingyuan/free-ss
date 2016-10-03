@@ -1,9 +1,8 @@
 function setSSAccount() {
   'use strict';
-  var constValue = require('./enum');
+  const {accountUrl, configPath} = require('./enum');
   let grabUrl = require('./net').grabUrl;
-  console.log('getting ss account...');
-  return grabUrl(constValue.accountUrl).then(data => {
+  return grabUrl(accountUrl).then(data => {
     let configs = [];
     let h4s = data.match(/<h4>(.*)?<\/h4>/g)
       .slice(0, 18)
@@ -23,17 +22,15 @@ function setSSAccount() {
     }
     if (!configs.length) {
       throw Error('no available ss account...');
-      console.error('no available ss account...');
       return;
     }
     return configs;
   }).then(function(configs) {
     var file = require('./file');
-    var config = file.Json(constValue.configPath).read();
+    var config = file.Json(configPath).read();
     config.index = 0;
     config.configs = configs;
-    file.Json(constValue.configPath).write(config);
-    console.log('get account successfully...');
+    file.Json(configPath).write(config);
   });
 }
 

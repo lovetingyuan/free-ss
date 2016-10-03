@@ -38,7 +38,7 @@ function startClient(callback) {
   const { clientPath } = require('./enum');
   setTimeout(function() {
     console.log('ss client has started, you can browse now...');
-  }, 1000);
+  });
   return require('child_process').execFile(clientPath, callback);
 }
 

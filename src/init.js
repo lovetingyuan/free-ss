@@ -1,7 +1,7 @@
 module.exports = function() {
   'use strict';
   //默认配置
-  let defaultConfig = {
+  const defaultConfig = {
     "configs": [],
     "strategy": null,
     "index": 0,
@@ -39,7 +39,9 @@ module.exports = function() {
   }
 
   console.log("starting fq...");
+  console.log('getting ss account...');
   account.setSSAccount().then(function() {
+    console.log('get ss account successfully...');
     if (!file.has(constValue.clientPath, 'file')) {
       console.log('no ss client, downloading...');
       return client.downloadClient();
