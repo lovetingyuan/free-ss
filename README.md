@@ -1,4 +1,4 @@
-#### 使用node配合[ss客户端](https://github.com/shadowsocks/shadowsocks-windows)实现fq （目前只支持windows用户）
+#### 使用node配合[ss客户端](https://github.com/shadowsocks/shadowsocks-windows)实现fq （目前只支持windows）
 
 **使用方法：**
 * 如果你没有安装`nodejs`请先安装，访问 https://nodejs.org/en/ 下载安装最新版即可
