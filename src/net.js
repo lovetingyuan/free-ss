@@ -6,7 +6,7 @@
 function grabUrl(url, options) {
   'use strict';
   let URL = require('url');
-  if(typeof url === 'string') {
+  if (typeof url === 'string') {
     url = Object.assign({}, URL.parse(url), options || {});
   }
   var protocal = url.protocol.slice(0, -1) || 'http';
@@ -29,4 +29,18 @@ function grabUrl(url, options) {
   });
 }
 
+function githubGet(url) {
+  let URL = require('url');
+  if (typeof url === 'string') {
+    return Object.assign({}, URL.parse(url), {
+      'headers': {
+        'Accept': 'application/vnd.github.VERSION.raw',
+        'User-Agent': 'lovetingyuan/fq'
+      }
+    });
+  }
+  return url;
+}
+
+exports.githubGet = githubGet;
 exports.grabUrl = grabUrl;

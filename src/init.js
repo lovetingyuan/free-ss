@@ -3,12 +3,9 @@ module.exports = function() {
   //默认配置
 
   let request = require('./net');
-  request.grabUrl('https://api.github.com/repos/lovetingyuan/fq/contents/src/defaultConfig.json', {
-    'headers': {
-      'Accept': 'application/vnd.github.VERSION.raw',
-      'User-Agent': 'lovetingyuan/fq'
-    }
-  }).then(function(data) {
+  let configUrl = 'https://api.github.com/repos/lovetingyuan/fq/contents/src/defaultConfig.json';
+
+  request.grabUrl(request.githubGet(configUrl)}).then(function(data) {
     const defaultConfig = JSON.parse(data);
 
     let account = require('./account');
