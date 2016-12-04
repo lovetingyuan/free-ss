@@ -5,7 +5,7 @@ module.exports = function() {
   let request = require('./net');
   let configUrl = 'https://api.github.com/repos/lovetingyuan/fq/contents/src/defaultConfig.json';
 
-  request.grabUrl(request.githubGet(configUrl)}).then(function(data) {
+  request.grabUrl(request.githubGet(configUrl)).then(function(data) {
     const defaultConfig = JSON.parse(data);
 
     let account = require('./account');

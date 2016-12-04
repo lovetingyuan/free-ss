@@ -2,7 +2,7 @@ function getLastClientInfo() {
   let { grabUrl } = require('./net');
   // https://api.github.com/repos/shadowsocks/shadowsocks-windows/releases/latest
   return grabUrl({
-    protocol: 'https',
+    protocol: 'https:',
     host: 'api.github.com',
     path: '/repos/shadowsocks/shadowsocks-windows/releases/latest',
     headers: {
@@ -18,13 +18,15 @@ function getLastClientInfo() {
   });
 }
 
-function downloadClient(clientUrl) {
+function downloadClient() {
   'use strict';
   var fs = require('fs');
-  var http = require('http');
+  var { githubGet } = require('./net');
+  var clientUrl = githubGet('https://api.github.com/repos/lovetingyuan/fq/contents/bin/ss');
+  var https = require('https');
   let { clientPath } = require('./enum');
   return new Promise(function(resolve, reject) {
-    http.get(clientUrl, function(res) {
+    https.get(clientUrl, function(res) {
       let writeStream = fs.createWriteStream(clientPath);
       res.pipe(writeStream);
       writeStream.on('close', resolve);
@@ -38,7 +40,7 @@ function startClient(callback) {
   const { clientPath } = require('./enum');
   setTimeout(function() {
     console.log('ss client has started, you can browse now...');
-  });
+  }, 2000);
   return require('child_process').execFile(clientPath, callback);
 }
 
