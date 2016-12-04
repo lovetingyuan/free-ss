@@ -2,7 +2,7 @@ function getLastClientInfo() {
   let { grabUrl } = require('./net');
   // https://api.github.com/repos/shadowsocks/shadowsocks-windows/releases/latest
   return grabUrl({
-    protocal: 'https',
+    protocol: 'https',
     host: 'api.github.com',
     path: '/repos/shadowsocks/shadowsocks-windows/releases/latest',
     headers: {
