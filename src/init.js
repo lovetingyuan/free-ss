@@ -4,8 +4,16 @@ module.exports = function() {
 
   let request = require('./net');
   let configUrl = 'https://api.github.com/repos/lovetingyuan/fq/contents/src/defaultConfig.json';
-
-  request.grabUrl(request.githubGet(configUrl)).then(function(data) {
+  let tagConfig = request.githubGet('https://api.github.com/repos/lovetingyuan/fq/tags');
+  request.grabUrl(tagConfig).then(function(data) {
+    const tagInfo = JSON.parse(data);
+    var latestVersion = tagInfo[0].name.substr(1);
+    var currentVersion = require('../package.json').version;
+    if(latestVersion !== currentVersion) {
+      console.log(`freess@${currentVersion} is deprecated, latest version is ${latestVersion}, please update`);
+    }
+    return request.grabUrl(request.githubGet(configUrl));
+  }).then(function(data) {
     const defaultConfig = JSON.parse(data);
 
     let account = require('./account');
