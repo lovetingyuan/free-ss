@@ -1,6 +1,7 @@
+const homeDir = require('os').homedir();
 module.exports = {
-  dirName: process.env.HOME + "/shadowsocks",
-  clientName: process.env.HOME + "/shadowsocks.exe",
-  clientPath: process.env.HOME + "/shadowsocks/shadowsocks.exe",
-  configPath: process.env.HOME + "/shadowsocks/gui-config.json",
+  dirName: homeDir + "/shadowsocks",
+  clientName: homeDir + "/shadowsocks.exe",
+  clientPath: homeDir + "/shadowsocks/shadowsocks.exe",
+  configPath: homeDir + "/shadowsocks/gui-config.json",
 }
