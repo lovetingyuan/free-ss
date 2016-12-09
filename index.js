@@ -5,4 +5,4 @@
     https://github.com/lovetingyuan/fq
 */
 'use strict';
-require('./src/init')();
+require('./lib/init')();

@@ -4,9 +4,13 @@
   "description": "使用shadowsocks和免费的账号来翻墙，使用0配置，点击就可科学上网",
   "main": "index.js",
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-latest": "^6.16.0"
+  },
   "scripts": {
-    "test": "node index"
+    "test": "node index",
+    "build": "babel src -d lib"
   },
   "repository": {
     "type": "git",
