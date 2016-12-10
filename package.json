@@ -1,7 +1,7 @@
 {
   "name": "freess",
-  "version": "2.3.2",
-  "description": "使用shadowsocks和免费的账号来翻墙，使用0配置，点击就可科学上网",
+  "version": "2.3.3",
+  "description": "使用shadowsocks和免费的账号来翻墙",
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
