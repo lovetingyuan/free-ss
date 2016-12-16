@@ -18,7 +18,10 @@ function grabUrl(url, options) {
         data += chunk;
       });
       res.on("end", function() {
-        resolve(data);
+        resolve({
+          response: data,
+          res
+        });
       });
       res.on('error', function(e) {
         reject(e);

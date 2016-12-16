@@ -2,12 +2,18 @@ function setSSAccount(accountUrl) {
   'use strict';
   const { configPath} = require('./enum');
   let grabUrl = require('./net').grabUrl;
-  return grabUrl(accountUrl).then(data => {
+  return  grabUrl(accountUrl).then(function(data) {
+    if(data.res.statusCode == 301) {
+      return grabUrl(data.res.headers.location);
+    } else {
+      return data;
+    }
+  }).then(data => {
     var file = require('./file');
     var config = file.Json(configPath).read();
     let sampleServer = config.configs[0];
     let configs = [];
-    let h4s = data.match(/<h4>(.*)?<\/h4>/g)
+    let h4s = data.response.match(/<h4>(.*)?<\/h4>/g)
       .slice(0, 18)
       .filter((v, i) => i % 6 < 4)
       .map(v => v.replace(/<h4>[\s\S]+?:([\s\S]*)?<\/h4>/, '$1'));

@@ -9,7 +9,7 @@ function getLastClientInfo() {
       'User-Agent': 'lovetingyuan/fq'
     }
   }).then(function(data) {
-    let releaseInfo = JSON.parse(data);
+    let releaseInfo = JSON.parse(data.response);
     return {
       version: releaseInfo.name,
       sha1: releaseInfo.body.match(/[A-Z0-9]{40}/i)[0].toUpperCase(),

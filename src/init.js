@@ -6,7 +6,7 @@ module.exports = function() {
   let configUrl = 'https://api.github.com/repos/lovetingyuan/fq/contents/src/defaultConfig.json';
   let tagConfig = request.githubGet('https://api.github.com/repos/lovetingyuan/fq/tags');
   request.grabUrl(tagConfig).then(function(data) {
-    const tagInfo = JSON.parse(data);
+    const tagInfo = JSON.parse(data.response);
     var latestVersion = tagInfo[0].name.substr(1);
     var currentVersion = require('../package.json').version;
     if(latestVersion !== currentVersion) {
@@ -14,7 +14,7 @@ module.exports = function() {
     }
     return request.grabUrl(request.githubGet(configUrl));
   }).then(function(data) {
-    const defaultConfig = JSON.parse(data);
+    const defaultConfig = JSON.parse(data.response);
 
     let account = require('./account');
     let constValue = require('./enum');
