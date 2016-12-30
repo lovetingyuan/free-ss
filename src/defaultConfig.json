@@ -23,5 +23,6 @@
   "isVerboseLogging": false,
   "proxy": null,
   "hotkey": null,
-  "accountUrl": "http://www.ishadowsocks.com"
+  "accountUrl": "http://www.ishadowsocks.com",
+  "clientUrl": ""
 }
