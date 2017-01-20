@@ -1,9 +1,12 @@
 {
   "name": "freess",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "使用shadowsocks和免费的账号来翻墙",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "debug": "^2.6.0",
+    "request": "^2.79.0"
+  },
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-preset-latest": "^6.16.0"
