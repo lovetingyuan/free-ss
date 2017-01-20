@@ -47,7 +47,7 @@
       "ServerMoveDown": ""
     }
   },
-  "sha": "49A3163DB16293F737A9663F8F12B98374A308D2",
+  "sha": "D3AB96403C444F3F6793043C14388057964F9451",
   "accountUrl": "http://120.24.69.104:8083/ssaccount",
   "configName": "gui-config.json",
   "clientName": "Shadowsocks.exe",
