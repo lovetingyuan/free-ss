@@ -1,67 +1,71 @@
-function getLastClientInfo() {
-  let { grabUrl } = require('./net');
-  // https://api.github.com/repos/shadowsocks/shadowsocks-windows/releases/latest
-  return grabUrl({
-    protocol: 'https:',
-    host: 'api.github.com',
-    path: '/repos/shadowsocks/shadowsocks-windows/releases/latest',
-    headers: {
-      'User-Agent': 'lovetingyuan/fq'
+ const fs = require('fs');
+ const path = require('path');
+ const URL = require('url');
+ const {
+   githubBaseUrl,
+   githubHeaders,
+   dirName
+ } = require('./const');
+ var clientProcess = null;
+ var debug = function(content) {
+   console.log('freess: ' + content);
+ };
+
+ function downloadClient(clientPath, remoteConfig) {
+   var fs = require('fs');
+   var https = require('https');
+   return new Promise(function(resolve, reject) {
+    var has = require('./file').has;
+    if(has(clientPath, 'file')) {
+      debug("正在更新客户端...");
+    } else {
+      debug("正在下载客户端...");
     }
-  }).then(function(data) {
-    let releaseInfo = JSON.parse(data.response);
-    return {
-      version: releaseInfo.name,
-      sha1: releaseInfo.body.match(/[A-Z0-9]{40}/i)[0].toUpperCase(),
-      downloadUrl: releaseInfo.assets[0].browser_download_url
-    };
-  });
-}
+     var clientUrlObj = URL.parse(githubBaseUrl + '/bin/ss');
+     https.get(Object.assign({}, clientUrlObj, {
+       headers: githubHeaders
+     }), function(res) {
+       const writeStream = fs.createWriteStream(clientPath);
+       res.pipe(writeStream);
+       writeStream.on('close', () => {
+           var { getSHA } = require('./file');
+           if (getSHA(clientPath) !== remoteConfig.sha.toLowerCase()) {
+             fs.unlinkSync(clientPath);
+             debug('抱歉，客户端校验错误');
+             reject();
+           } else {
+             resolve(remoteConfig);
+           }
+         })
+         .on('error', reject);
+     });
+   });
+ }
 
-function downloadClient() {
-  'use strict';
-  var fs = require('fs');
-  var { githubGet } = require('./net');
-  var clientUrl = githubGet('https://api.github.com/repos/lovetingyuan/fq/contents/bin/ss');
-  var https = require('https');
-  let { clientPath } = require('./enum');
-  return new Promise(function(resolve, reject) {
-    https.get(clientUrl, function(res) {
-      let writeStream = fs.createWriteStream(clientPath);
-      res.pipe(writeStream);
-      writeStream.on('close', resolve);
-      writeStream.on('error', reject);
-    });
-  });
-}
-
-
-function startClient(callback) {
-  const { clientPath } = require('./enum');
-  setTimeout(function() {
-    console.log('ss client has started, you can browse now...');
-  }, 2000);
-  return require('child_process').execFile(clientPath, callback);
-}
-
-function getClientSha1() {
-  var { clientPath } = require('./enum');
-  var crypto = require('crypto'),
-    fs = require('fs');
-  return new Promise(function(resolve, reject) {
-    fs.readFile(clientPath, function(err, data) {
-      if (err) return reject(err);
-      const result = crypto.createHash('sha1')
-        .update(data, 'utf8')
-        .digest('hex');
-      resolve(result.toUpperCase());
-    });
-  });
-}
-
-module.exports = {
-  getLastClientInfo,
-  startClient,
-  downloadClient,
-  getClientSha1
-}
+ function startClient(remoteConfig, timer) {
+   var clientPath = path.join(dirName, remoteConfig.clientName);
+   var { setAccount } = require('./account');
+   var childProcess = require('child_process');
+   debug('正在设置账号...');
+   return setAccount(remoteConfig).then(function() {
+     if (clientProcess) {
+       debug('正在重启客户端...');
+       clientProcess.kill();
+     } else {
+       debug('正在启动客户端...');
+     }
+     clientProcess = childProcess.execFile(clientPath, function() {
+       if (clientProcess.exitCode == 0) {
+         debug('客户端已经退出，感谢使用');
+         clearInterval(timer);
+       }
+     });
+     setTimeout(function() {
+       debug('OK, 现在可以科学上网');
+     }, 1000);
+   });
+ }
+ module.exports = {
+   downloadClient,
+   startClient
+ }

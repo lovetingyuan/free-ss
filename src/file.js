@@ -20,25 +20,16 @@ function has(filepath, mode) {
   }
 }
 
-//同步读写json的方法
-function Json(path) {
-  'use strict';
-  var fs = require('fs');
-  return {
-    read: function() {
-      if (!has(path, 'file')) {
-        throw new Error('function json, no json file');
-      }
-      return JSON.parse(fs.readFileSync(path, 'utf8'));
-    },
-    write: function(content) {
-      if (typeof content === 'object' && !!content) {
-        content = JSON.stringify(content, null, 4);
-      }
-      fs.writeFileSync(path, content, 'utf8');
-    }
-  };
+function getSHA(filePath) {
+  if(!has(filePath, 'file'))
+    return null;
+  var crypto = require('crypto'),
+    fs = require('fs');
+  const result = crypto.createHash('sha1')
+    .update(fs.readFileSync(filePath), 'utf8')
+    .digest('hex');
+  return result.toLowerCase();
 }
 
 exports.has = has;
-exports.Json = Json;
+exports.getSHA = getSHA;
