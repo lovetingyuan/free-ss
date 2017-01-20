@@ -1,0 +1,56 @@
+{
+  "config": {
+    "configs": [{
+      "server": "a.ssx.host",
+      "server_port": 1024,
+      "password": "56653633",
+      "method": "aes-256-cfb",
+      "remarks": "ishadowsocks",
+      "auth": false,
+      "timeout": 5
+    }],
+    "strategy": null,
+    "index": 0,
+    "global": false,
+    "enabled": true,
+    "shareOverLan": false,
+    "isDefault": false,
+    "localPort": 1080,
+    "pacUrl": null,
+    "useOnlinePac": false,
+    "secureLocalPac": true,
+    "availabilityStatistics": false,
+    "autoCheckUpdate": false,
+    "checkPreRelease": false,
+    "isVerboseLogging": false,
+    "logViewer": {
+      "topMost": false,
+      "wrapText": false,
+      "toolbarShown": false,
+      "Font": "Consolas, 8pt",
+      "BackgroundColor": "Black",
+      "TextColor": "White"
+    },
+    "proxy": {
+      "useProxy": false,
+      "proxyType": 0,
+      "proxyServer": "",
+      "proxyPort": 0,
+      "proxyTimeout": 3
+    },
+    "hotkey": {
+      "SwitchSystemProxy": "",
+      "SwitchSystemProxyMode": "",
+      "SwitchAllowLan": "",
+      "ShowLogs": "",
+      "ServerMoveUp": "",
+      "ServerMoveDown": ""
+    }
+  },
+  "sha": "49A3163DB16293F737A9663F8F12B98374A308D2",
+  "accountUrl": "http://120.24.69.104:8083/ssaccount",
+  "configName": "gui-config.json",
+  "clientName": "Shadowsocks.exe",
+  "configKey": "configs",
+  "accountSchema": ["server", "server_port", "password", "method"]
+}
