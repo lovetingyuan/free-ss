@@ -40,17 +40,18 @@
     }
   },
   "sha": "49A3163DB16293F737A9663F8F12B98374A308D2",
+  "clientVersion": "3.4.3",
   "accountUrl": "http://120.24.69.104:8083/ssaccount",
   "configName": "gui-config.json",
   "clientName": "Shadowsocks.exe",
   "accountKey": "configs",
   "accountKeys": ["server", "server_port", "password", "method"],
   "accountSchema": {
-    "server": "a.ssx.host",
-    "server_port": 1024,
-    "password": "56653633",
-    "method": "aes-256-cfb",
-    "remarks": "ishadowsocks",
+    "server": "",
+    "server_port": 0,
+    "password": "",
+    "method": "",
+    "remarks": "",
     "auth": false,
     "timeout": 5
   }
