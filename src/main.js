@@ -16,14 +16,15 @@ module.exports = function() {
   } = require('./const');
   var args = process.argv.slice(2);
   var restartTime = 60 * 60 * 1000;
+  var usage = '用法：ss [ OPTIONS ] \nOPTIONS: -t=restart_interval_time(minites)  重启客户端的时间间隔(分钟)';
   if(args.length > 1) {
-    console.log('用法： ss [ OPTIONS ] \nOPTIONS: -t=restart_interval_time(minites)  重启客户端的时间间隔(分钟)');
+    console.log(usage);
   } else if(args.length === 1){
     if(args[0] === '-h') {
-      console.log('用法： ss [ OPTIONS ] \nOPTIONS: -t=restart_interval_time(minites)  重启客户端的时间间隔(分钟)');
+      console.log(usage);
       return;
     } if(args[0] === '-v') {
-      console.log('fress版本: ' + version);
+      console.log('freess版本: ' + version);
       return;
     } else if(/^-t=\d+$/.test(args[0])){
       restartTime = args[0].split('=')[1] * 60 * 1000 || restartTime;
