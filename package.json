@@ -1,6 +1,6 @@
 {
   "name": "freess",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "使用shadowsocks和免费的账号来翻墙",
   "main": "index.js",
   "dependencies": {},
