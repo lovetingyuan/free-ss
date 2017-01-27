@@ -1,6 +1,6 @@
 {
   "name": "freess",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "使用shadowsocks和免费的账号来翻墙",
   "main": "index.js",
   "dependencies": {},
@@ -9,7 +9,7 @@
     "babel-preset-latest": "^6.16.0"
   },
   "scripts": {
-    "test": "node index",
+    "test": "node src/main",
     "build": "rm -rf lib && babel src -d lib"
   },
   "repository": {

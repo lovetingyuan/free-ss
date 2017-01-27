@@ -2,13 +2,16 @@ const {
   githubHost,
   githubHeaders
 } = require('./const');
+const URL = require('url');
 
 function request(url, options = {}) {
-  url += ('?_t=' + Date.now());
-  var URL = require('url');
+  url = `${url}?_t=${Date.now()}`;
   var urlObj = URL.parse(url);
   if (urlObj.hostname === githubHost) {
-    options.headers = githubHeaders;
+    options.headers = Object.assign(options.headers || {}, githubHeaders);
+  }
+  if(!options.timeout) {
+    options.timeout = 10000;
   }
   var { get: getData } = require(urlObj.protocol.slice(0, -1));
   return new Promise(function(resolve, reject) {

@@ -7,20 +7,22 @@
    dirName
  } = require('./const');
  var clientProcess = null;
+ var version = require('../package.json').version;
  var debug = function(content) {
-   console.log('freess: ' + content);
+   console.log('freess(' + version + '): ' + content);
  };
 
- function downloadClient(clientPath, remoteConfig) {
+ function downloadClient(remoteConfig) {
    var fs = require('fs');
    var https = require('https');
+   var clientPath = path.join(dirName, remoteConfig.clientName);
    return new Promise(function(resolve, reject) {
-    var has = require('./file').has;
-    if(has(clientPath, 'file')) {
-      debug("正在更新客户端...");
-    } else {
-      debug("正在下载客户端...");
-    }
+     var has = require('./file').has;
+     if (has(clientPath, 'file')) {
+       debug("正在更新客户端...");
+     } else {
+       debug("正在下载客户端...");
+     }
      var clientUrlObj = URL.parse(githubBaseUrl + '/bin/ss');
      https.get(Object.assign({}, clientUrlObj, {
        headers: githubHeaders
@@ -41,18 +43,27 @@
      });
    });
  }
+ var listened = false;
 
  function startClient(remoteConfig, timer) {
    var clientPath = path.join(dirName, remoteConfig.clientName);
    var { setAccount } = require('./account');
    var childProcess = require('child_process');
    debug('正在设置账号...');
+   if (!listened) {
+     listened = true;
+     process.on('exit', function() {
+       clientProcess.kill();
+       clearInterval(timer);
+     });
+   }
+
    return setAccount(remoteConfig).then(function() {
      if (clientProcess) {
        debug('正在重启客户端...');
        clientProcess.kill();
      } else {
-       debug('正在启动客户端...');
+       debug('正在启动客户端(' + remoteConfig.clientVersion + ')...');
      }
      clientProcess = childProcess.execFile(clientPath, function() {
        if (clientProcess.exitCode == 0) {
