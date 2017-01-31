@@ -7,10 +7,9 @@
    dirName
  } = require('./const');
  var clientProcess = null;
- var version = require('../package.json').version;
  var debug = function(content) {
    if (process.env.NODE_ENV === 'TEST') return;
-   console.log('freess(' + version + '): ' + content);
+   console.log('freess: ' + content);
  };
 
  function downloadClient(remoteConfig) {

@@ -6,7 +6,7 @@ module.exports = function() {
   const version = require('../package.json').version;
   var debug = function(content) {
     if (process.env.NODE_ENV === 'TEST') return;
-    console.log('freess(' + version + '): ' + content);
+    console.log('freess: ' + content);
   };
   if (os.platform() !== 'win32') {
     return debug('目前仅支持windows平台');
@@ -31,7 +31,7 @@ module.exports = function() {
         return;
       } else if (/^-t=\d+$/.test(args[0])) {
         restartTime = args[0].split('=')[1] * 60 * 1000 || restartTime;
-        if(restartTime < 10 * 60 * 1000) {
+        if (restartTime < 10 * 60 * 1000) {
           console.log('重启间隔时间最少为10分钟！');
           restartTime = 10 * 60 * 1000;
         }
@@ -42,7 +42,7 @@ module.exports = function() {
   }
 
   var { request } = require('./request');
-  debug('请稍候 ...');
+  debug('请稍候(' + version + ') ...');
   return request(githubBaseUrl + '/package.json').then(data => {
     data = JSON.parse(data);
     if (data.version !== version) {
