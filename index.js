@@ -5,4 +5,5 @@
     https://github.com/lovetingyuan/fq
 */
 'use strict';
-require('./lib/main')();
+const freess = require('./lib/main');
+module.exports = freess;

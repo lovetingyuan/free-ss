@@ -9,6 +9,7 @@
  var clientProcess = null;
  var version = require('../package.json').version;
  var debug = function(content) {
+   if (process.env.NODE_ENV === 'TEST') return;
    console.log('freess(' + version + '): ' + content);
  };
 
@@ -73,7 +74,8 @@
      });
      setTimeout(function() {
        debug('OK, 现在可以科学上网');
-     }, 1000);
+     }, 1500);
+     return clientProcess.pid;
    });
  }
  module.exports = {
