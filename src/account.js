@@ -1,28 +1,30 @@
-function setAccount(remoteConfig) {
-  var { request } = require('./request');
-  var path = require('path');
-  var { dirName } = require('./const');
-  var configPath = path.join(dirName, remoteConfig.configName);
-  return request(remoteConfig.accountUrl).then(function(data) {
-    data = JSON.parse(data);
-    if (data.result && data.data.length) {
-      var accounts = [],
-        fs = require('fs');
-      data.data.forEach(v => {
-        let account = Object.assign({}, remoteConfig.accountSchema);
-        remoteConfig.accountKeys.forEach((key, i) => {
-          account[key] = v[i];
+  const { request } = require('./request');
+  const path = require('path');
+  const { dirName } = require('./const');
+  const fs = require('fs');
+
+  function setAccount(remoteConfig) {
+    const configPath = path.join(dirName, remoteConfig.configName);
+    return request(remoteConfig.accountUrl).then((_data) => {
+      const data = JSON.parse(_data);
+      if (data.result && data.data.length) {
+        const accounts = [];
+        data.data.forEach((v) => {
+          const account = Object.assign({}, remoteConfig.accountSchema);
+          remoteConfig.accountKeys.forEach((key, i) => {
+            account[key] = v[i];
+          });
+          accounts.push(account);
         });
-        accounts.push(account);
-      });
-      var localConfig = require(configPath);
-      localConfig._version = remoteConfig.clientVersion;
-      localConfig[remoteConfig.accountKey] = accounts;
-      fs.writeFileSync(configPath, JSON.stringify(localConfig, null, 2));
-      return localConfig;
-    } else {
+        // eslint-disable-next-line global-require, import/no-dynamic-require
+        const localConfig = require(configPath);
+        // eslint-disable-next-line no-underscore-dangle
+        localConfig._version = remoteConfig.clientVersion;
+        localConfig[remoteConfig.accountKey] = accounts;
+        fs.writeFileSync(configPath, JSON.stringify(localConfig, null, 2));
+        return localConfig;
+      }
       return Promise.reject(data.data);
-    }
-  });
-}
-exports.setAccount = setAccount;
+    });
+  }
+  exports.setAccount = setAccount;

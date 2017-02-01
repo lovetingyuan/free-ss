@@ -1,17 +1,22 @@
 {
   "name": "freess",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "使用shadowsocks和免费的账号来翻墙",
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-preset-latest": "^6.16.0",
-    "chai": "^3.5.0"
+    "chai": "^3.5.0",
+    "eslint": "^3.14.1",
+    "eslint-config-airbnb-base": "^11.0.1",
+    "eslint-plugin-import": "^2.2.0",
+    "mocha": "^3.2.0"
   },
   "scripts": {
-    "test": "set NODE_ENV=TEST&&mocha -t 30000",
-    "build": "rm -rf lib && babel src -d lib"
+    "test": "set NODE_ENV=TEST&&node ./node_modules/mocha/bin/mocha -t 30000",
+    "lint": "node ./node_modules/eslint/bin/eslint -o lintreport -f table --fix src/*.js && cat lintreport",
+    "build": "rm -rf lib && node ./node_modules/babel-cli/bin/babel src -d lib"
   },
   "repository": {
     "type": "git",
