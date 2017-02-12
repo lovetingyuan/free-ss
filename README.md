@@ -1,4 +1,4 @@
-### 使用 `nodejs` 配合 [`shadowsocks`客户端](https://github.com/shadowsocks/shadowsocks-windows) 实现翻墙 （windows）
+### 使用 [`nodejs`](https://nodejs.org/en/) 配合 [`shadowsocks-windows`](https://github.com/shadowsocks/shadowsocks-windows) 实现翻墙 （windows）
 
 **使用方法：**
 * 如果你没有安装`nodejs`请先安装，访问 https://nodejs.org/en/ 下载安装最新版即可
