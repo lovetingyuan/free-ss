@@ -48,7 +48,7 @@
  const { setAccount } = require('./account');
  const childProcess = require('child_process');
 
- function startClient(remoteConfig, timer) {
+ function startClient(remoteConfig, timer, autoGoogle) {
    const clientPath = path.join(dirName, remoteConfig.clientName);
    debug('正在设置账号...');
    if (!listened) {
@@ -74,6 +74,9 @@
      });
      setTimeout(() => {
        debug('OK, 现在可以科学上网');
+       if(autoGoogle) {
+        childProcess.spawn('cmd', '/c start https://www.google.com'.split(' '));
+       }
      }, 1500);
      return clientProcess.pid;
    });
