@@ -13,3 +13,5 @@
 + 使用时不要关闭命令行界面；
 + 如果不成功，请在 ![小飞机](https://raw.githubusercontent.com/shadowsocks/shadowsocks-windows/master/shadowsocks-csharp/Resources/ss16.png) 图标右击选择其他服务器；
 + 退出时请在任务栏的 ![小飞机](https://raw.githubusercontent.com/shadowsocks/shadowsocks-windows/master/shadowsocks-csharp/Resources/ss16.png) 图标右击点击退出，否则请手动还原系统的代理设置
+
+对于非windows用户可以尝试更新hosts文件的方式，请戳https://github.com/lovetingyuan/hosit
