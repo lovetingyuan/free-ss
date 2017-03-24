@@ -24,16 +24,10 @@ function request(_url, options = {}) {
         res.resume();
         return;
       }
-      let data = '';
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
-      res.on('end', () => {
-        resolve(data);
-      });
-    }).on('error', (e) => {
-      reject(e);
-    });
+      let payload = '';
+      res.on('data', chunk => payload += chunk)
+        .on('end', resolve.bind(null, payload));
+    }).on('error', reject);
   });
 }
 

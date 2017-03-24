@@ -12,7 +12,7 @@
  const { getSHA } = require('./file');
 
  let clientProcess = null;
- const debug = content => {
+ const debug = (content) => {
    if (process.env.NODE_ENV === 'TEST') return;
    console.log(`freess: ${content}`);
  };
@@ -54,7 +54,9 @@
    if (!listened) {
      listened = true;
      process.on('exit', () => {
-       clientProcess.kill();
+       if (clientProcess) {
+         clientProcess.kill();
+       }
        clearInterval(timer);
      });
    }
@@ -74,8 +76,8 @@
      });
      setTimeout(() => {
        debug('OK, 现在可以科学上网');
-       if(autoGoogle) {
-        childProcess.spawn('cmd', '/c start https://www.google.com'.split(' '));
+       if (autoGoogle) {
+         childProcess.spawn('cmd', '/c start https://www.google.com'.split(' '));
        }
      }, 1500);
      return clientProcess.pid;

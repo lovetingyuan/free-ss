@@ -7,7 +7,10 @@
     const configPath = path.join(dirName, remoteConfig.configName);
     return request(remoteConfig.accountUrl).then((_data) => {
       const data = JSON.parse(_data);
-      if (data.result && data.data.length) {
+      if (data.result) {
+        if (data.data.length === 0) {
+          return Promise.reject('没有可用账号');
+        }
         const accounts = [];
         data.data.forEach((v) => {
           const account = Object.assign({}, remoteConfig.accountSchema);
@@ -24,7 +27,7 @@
         fs.writeFileSync(configPath, JSON.stringify(localConfig, null, 2));
         return localConfig;
       }
-      return Promise.reject(data.data);
+      return Promise.reject(data.data || '无法获取可用账号');
     });
   }
   exports.setAccount = setAccount;

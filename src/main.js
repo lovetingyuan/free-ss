@@ -1,7 +1,6 @@
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
-const childProcess = require('child_process');
 const version = require('../package.json').version;
 const {
   dirName,
@@ -16,7 +15,7 @@ const debug = (content) => {
   if (process.env.NODE_ENV === 'TEST') return;
   console.log(`${appName}: ${content}`);
 };
-var autoGoogle = false;
+let autoGoogle = false;
 module.exports = function main() {
   if (os.platform() !== 'win32') {
     return debug('目前仅支持windows平台');
@@ -39,7 +38,7 @@ module.exports = function main() {
           console.log('重启间隔时间最少为10分钟！');
           restartTime = 10 * 60 * 1000;
         }
-      } else if(args[0] === '-s') {
+      } else if (args[0] === '-s') {
         autoGoogle = true;
       } else {
         console.log('ss -h 获取帮助');
@@ -48,20 +47,20 @@ module.exports = function main() {
   }
 
   debug(`请稍候(${version}) ...`);
-  return request(`https://registry.npmjs.org/${appName}`).then(_data => {
-      const data = JSON.parse(_data);
-      const latestVersion = data['dist-tags'].latest;
-      if (latestVersion !== version) {
-        debug(`版本${version}已经废弃，请更新${appName}的最新版本${latestVersion}`);
-      }
-      debug('正在配置...');
-      return request(`${githubBaseUrl}/bin/config`);
-    }, (err) => {
-      if (err.code === 'ETIMEDOUT') {
-        return Promise.reject('网络异常，请稍候重试');
-      }
-      return Promise.reject(err);
-    })
+  return request(`https://registry.npmjs.org/${appName}`).then((_data) => {
+    const data = JSON.parse(_data);
+    const latestVersion = data['dist-tags'].latest;
+    if (latestVersion !== version) {
+      debug(`版本${version}已经废弃，请更新${appName}的最新版本${latestVersion}`);
+    }
+    debug('正在配置...');
+    return request(`${githubBaseUrl}/bin/config`);
+  }, (err) => {
+    if (err.code === 'ETIMEDOUT') {
+      return Promise.reject('网络异常，请稍候重试');
+    }
+    return Promise.reject(err);
+  })
     .then((_remoteConfig) => {
       const remoteConfig = JSON.parse(_remoteConfig);
       const configPath = path.join(dirName, remoteConfig.configName);
@@ -83,7 +82,7 @@ module.exports = function main() {
         startClient(remoteConfig, timer).then(() => {
           debug('客户端已经重启');
         }).catch((err) => {
-          debug(`抱歉，发生了错误：${err}`);
+          debug(`抱歉，发生了错误：${err.message || err}`);
           process.exit(0);
         });
       }, restartTime || remoteConfig.interval || 60 * 60 * 1000);
@@ -94,7 +93,7 @@ module.exports = function main() {
       data: clientProcessId,
     }))
     .catch((err) => {
-      debug(`抱歉，发生了错误：${err}`);
+      debug(`抱歉，发生了错误：${err.message || err}`);
       if (process.env.NODE_ENV !== 'TEST') {
         process.exit(0);
       }
