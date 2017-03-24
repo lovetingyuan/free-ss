@@ -26,7 +26,9 @@ function request(_url, options = {}) {
       }
       let payload = '';
       res.on('data', chunk => payload += chunk)
-        .on('end', resolve.bind(null, payload));
+        .on('end', () => {
+          resolve(payload)
+        });
     }).on('error', reject);
   });
 }
