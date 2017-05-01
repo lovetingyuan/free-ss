@@ -1,7 +1,7 @@
 {
   "config": {
     "configs": [],
-    "strategy": null,
+    "strategy": "com.shadowsocks.strategy.ha",
     "index": -1,
     "global": false,
     "enabled": true,
@@ -39,8 +39,8 @@
       "ServerMoveDown": ""
     }
   },
-  "sha": "49A3163DB16293F737A9663F8F12B98374A308D2",
-  "clientVersion": "3.4.3",
+  "sha": "88B71B27A0E541005312C3047E757541924B27B4",
+  "clientVersion": "4.0.1",
   "accountUrl": "https://tingyuan.me/services/ssaccount",
   "configName": "gui-config.json",
   "clientName": "Shadowsocks.exe",
