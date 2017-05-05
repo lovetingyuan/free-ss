@@ -1,3 +1,5 @@
+## 正在变更数据，暂时无法使用，将很快恢复
+
 ### 使用 [`nodejs`](https://nodejs.org/en/) 配合 [`shadowsocks-windows`](https://github.com/shadowsocks/shadowsocks-windows) 实现翻墙 （windows）
 
 [![Version](https://img.shields.io/npm/v/freess.svg "version")](https://www.npmjs.com/package/freess)
