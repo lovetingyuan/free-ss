@@ -34,7 +34,7 @@ try {
 }
 
 function updateAccounts() {
-  return JSDOM.fromURL('https://my.ishadowx.biz/', {
+  return JSDOM.fromURL('https://my.ishadowx.biz/?_t=' + Date.now(), {
   }).then(dom => {
     const doc = dom.window.document
     const items = [...doc.querySelectorAll('.portfolio-item')]

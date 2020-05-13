@@ -1,10 +1,10 @@
 {
   "version": "4.1.10.0",
   "configs": [],
-  "strategy": null,
+  "strategy": "com.shadowsocks.strategy.ha",
   "index": 0,
   "global": false,
-  "enabled": false,
+  "enabled": true,
   "shareOverLan": false,
   "isDefault": false,
   "isIPv6Enabled": false,
