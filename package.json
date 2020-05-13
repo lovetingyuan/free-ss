@@ -1,42 +1,17 @@
 {
-  "name": "freess",
-  "version": "3.0.8",
-  "description": "使用shadowsocks和免费的账号来翻墙",
-  "main": "index.js",
-  "dependencies": {},
-  "devDependencies": {
-    "babel-cli": "^6.18.0",
-    "babel-preset-latest": "^6.16.0",
-    "chai": "^3.5.0",
-    "eslint": "^3.14.1",
-    "eslint-config-airbnb-base": "^11.0.1",
-    "eslint-plugin-import": "^2.2.0",
-    "mocha": "^3.2.0"
-  },
+  "name": "shadowsocks-windows",
+  "version": "1.0.0",
+  "description": "",
+  "main": "accounts.js",
   "scripts": {
-    "test": "set NODE_ENV=TEST&&node ./node_modules/mocha/bin/mocha -t 30000 ./test/*.js",
-    "lint": "node ./node_modules/eslint/bin/eslint -o lintreport -f table --fix src/*.js && cat lintreport",
-    "build": "rm -rf lib && node ./node_modules/babel-cli/bin/babel src -d lib"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node accounts.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lovetingyuan/fq.git"
-  },
-  "keywords": [
-    "shadowsocks",
-    "nodejs",
-    "fanqiang",
-    "翻墙",
-    "free",
-    "fq"
-  ],
-  "author": "tingyuan <1932294867@qq.com>",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/lovetingyuan/fq/issues"
-  },
-  "homepage": "https://github.com/lovetingyuan/fq#readme",
-  "bin": {
-    "ss": "./bin/start"
+  "dependencies": {
+    "jsdom": "^16.2.2",
+    "node-notifier": "^7.0.0"
   }
 }
