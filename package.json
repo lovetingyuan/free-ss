@@ -11,7 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "better-opn": "^2.0.0",
+    "fkill": "^7.0.1",
     "jsdom": "^16.2.2",
-    "node-notifier": "^7.0.0"
+    "node-notifier": "^7.0.0",
+    "ps-list": "^7.0.0"
   }
 }

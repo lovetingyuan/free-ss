@@ -2,6 +2,7 @@ const { JSDOM } = require('jsdom')
 const fs = require('fs')
 const path = require('path')
 const notifier = require('node-notifier')
+const childProcess = require('child_process')
 
 if (process.platform !== 'win32') {
   console.log('sorry, this script could only run at windows os.')
@@ -55,11 +56,11 @@ function updateAccounts() {
     fs.writeFileSync(require.resolve('./gui-config.json'), JSON.stringify(guiConfig, null, 2))
     dom.window.close()
     console.info('free ss updated!')
-    notifier.notify({
-      title: 'Update successfully!',
-      message: 'Please restart your shadowsocks client.',
-      timeout: 1
-    });
+    return startss()
+  }).then(() => {
+    setTimeout(() => {
+      process.exit(0)
+    }, 1000)
   }).catch(err => {
     console.error('Error:')
     console.error(err)
@@ -67,7 +68,36 @@ function updateAccounts() {
       title: 'Update failed!',
       message: err && err.message,
       wait: true
-    });
-  });
+    })
+    process.exit(0)
+  })
 }
 
+function startss() {
+  const psList = require('ps-list')
+  return psList().then(list => {
+    const ssprocess = list.find(item => {
+      return /shadowsocks\.exe/i.test(item.name)
+    })
+    if (!ssprocess) {
+      childProcess.spawn('./Shadowsocks.exe', {
+        detached: true
+      })
+      notifier.notify('Successfully!')
+    } else {
+      const fkill = require('fkill')
+      return fkill(ssprocess.pid, {
+        force: true,
+        tree: true,
+        ignoreCase: true
+      }).then(() => {
+        childProcess.spawn('./Shadowsocks.exe', {
+          detached: true
+        })
+        notifier.notify('Successfully!')
+      }).catch(() => {
+        notifier.notify('You have to restart shadowsocks!')
+      })
+    }
+  })
+}
