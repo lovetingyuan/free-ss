@@ -1,20 +1,16 @@
 {
-  "name": "shadowsocks-windows",
+  "name": "sstogoogle",
   "version": "1.0.0",
-  "description": "",
+  "description": "help you to visit google.",
   "main": "accounts.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node accounts.js"
+    "start": "node accounts.js",
+    "pkg": "npx pkg accounts.js -t win -o ss.exe"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "better-opn": "^2.0.0",
-    "fkill": "^7.0.1",
-    "jsdom": "^16.2.2",
-    "node-notifier": "^7.0.0",
-    "ps-list": "^7.0.0"
+    "jsdom": "^16.2.2"
   }
 }

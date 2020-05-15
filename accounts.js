@@ -1,12 +1,48 @@
 const { JSDOM } = require('jsdom')
 const fs = require('fs')
 const path = require('path')
-const notifier = require('node-notifier')
 const childProcess = require('child_process')
 
 if (process.platform !== 'win32') {
   console.log('sorry, this script could only run at windows os.')
   process.exit(0)
+}
+
+const SS = 'Shadowsocks.exe'
+
+function notify(title, message) {
+  return childProcess.spawn('./snoretoast-x86.exe', ['-t', title, '-m', message || title], {
+    detached: true
+  })
+}
+
+function exitApp(delay = 1000) {
+  setTimeout(() => {
+    process.exit(0)
+  }, delay);
+}
+
+function findPid () {
+  const ret = childProcess.execSync(`tasklist /FI "IMAGENAME eq ${SS}" /FO csv /NH`).toString('utf8')
+  if (!ret.includes(SS)) return
+  const targetProcess = ret.toString('utf8').trim().split('\r\n')
+  if (targetProcess.length) {
+    const pid = targetProcess[0].split(',').map(v => v.trim())[1]
+    const _pid = Number.parseInt(JSON.parse(pid), 10)
+    if (!Number.isNaN(_pid)) return _pid
+  }
+}
+
+function killProcess (pid, sig = 'SIGINT') {
+  if (typeof pid === 'number') {
+    process.kill(pid, sig)
+  }
+}
+
+function startss () {
+  return childProcess.spawn('./' + SS, {
+    detached: true
+  })
 }
 
 const genAccount = ([server, port, password, method]) => {
@@ -23,23 +59,20 @@ const genAccount = ([server, port, password, method]) => {
   }
 }
 
-try {
-  require('./gui-config.json')
-  updateAccounts()
-} catch (err) {
-  fs.writeFileSync(
-    path.join(__dirname, 'gui-config.json'),
-    JSON.stringify(require('./gui-config.default.json'), null, 2)
-  )
-  updateAccounts()
-}
+const dirname = /snapshot/.test(__dirname) ? process.cwd() : __dirname
+const CONFIGPATH = path.resolve(dirname, 'gui-config.json')
 
 function updateAccounts() {
   return JSDOM.fromURL('https://my.ishadowx.biz/?_t=' + Date.now(), {
   }).then(dom => {
     const doc = dom.window.document
     const items = [...doc.querySelectorAll('.portfolio-item')]
-    const guiConfig = require('./gui-config.json')
+    let guiConfig
+    try {
+      guiConfig = require('./gui-config.json')
+    } catch (err) {
+      guiConfig = require('./gui-config.default.json')
+    }
     guiConfig.configs = []
     items.forEach(item => {
       const account = []
@@ -53,51 +86,26 @@ function updateAccounts() {
         guiConfig.configs.push(genAccount(account))
       }
     })
-    fs.writeFileSync(require.resolve('./gui-config.json'), JSON.stringify(guiConfig, null, 2))
-    dom.window.close()
-    console.info('free ss updated!')
-    return startss()
-  }).then(() => {
-    setTimeout(() => {
-      process.exit(0)
-    }, 1000)
-  }).catch(err => {
-    console.error('Error:')
-    console.error(err)
-    notifier.notify({
-      title: 'Update failed!',
-      message: err && err.message,
-      wait: true
-    })
-    process.exit(0)
+    fs.writeFileSync(CONFIGPATH, JSON.stringify(guiConfig, null, 2))
+    try { dom.window.close() } catch (err) {}
   })
 }
 
-function startss() {
-  const psList = require('ps-list')
-  return psList().then(list => {
-    const ssprocess = list.find(item => {
-      return /shadowsocks\.exe/i.test(item.name)
-    })
-    if (!ssprocess) {
-      childProcess.spawn('./Shadowsocks.exe', {
-        detached: true
-      })
-      notifier.notify('Successfully!')
-    } else {
-      const fkill = require('fkill')
-      return fkill(ssprocess.pid, {
-        force: true,
-        tree: true,
-        ignoreCase: true
-      }).then(() => {
-        childProcess.spawn('./Shadowsocks.exe', {
-          detached: true
-        })
-        notifier.notify('Successfully!')
-      }).catch(() => {
-        notifier.notify('You have to restart shadowsocks!')
-      })
-    }
+function main () {
+  Promise.resolve().then(() => {
+    killProcess(findPid())
+    return updateAccounts()
+  }).then(() => {
+    console.info('ss accounts updated!')
+    startss()
+    notify('Update successfully!')
+    exitApp(500)
+  }).catch(err => {
+    console.error('Error:')
+    console.error(err)
+    notify('Update failed!', err && err.message)
   })
 }
+
+main()
+
