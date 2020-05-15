@@ -22,7 +22,7 @@ function exitApp(delay = 1000) {
   }, delay);
 }
 
-function findPid () {
+function findPid() {
   const ret = childProcess.execSync(`tasklist /FI "IMAGENAME eq ${SS}" /FO csv /NH`).toString('utf8')
   if (!ret.includes(SS)) return
   const targetProcess = ret.toString('utf8').trim().split('\r\n')
@@ -33,13 +33,13 @@ function findPid () {
   }
 }
 
-function killProcess (pid, sig = 'SIGINT') {
+function killProcess(pid, sig = 'SIGINT') {
   if (typeof pid === 'number') {
     process.kill(pid, sig)
   }
 }
 
-function startss () {
+function startss() {
   return childProcess.spawn('./' + SS, {
     detached: true
   })
@@ -76,22 +76,22 @@ function updateAccounts() {
     guiConfig.configs = []
     items.forEach(item => {
       const account = []
-        ;[...item.querySelectorAll('h4')].forEach((h4, i) => {
-          const value = h4.textContent.split(':')[1]
-          if (value) {
-            account.push(i === 1 ? parseInt(value.trim(), 10) : value.trim())
-          }
-        })
+      item.querySelectorAll('h4').forEach((h4, i) => {
+        const value = h4.textContent.split(':')[1]
+        if (value) {
+          account.push(i === 1 ? parseInt(value.trim(), 10) : value.trim())
+        }
+      })
       if (account.length === 4) {
         guiConfig.configs.push(genAccount(account))
       }
     })
     fs.writeFileSync(CONFIGPATH, JSON.stringify(guiConfig, null, 2))
-    try { dom.window.close() } catch (err) {}
+    try { dom.window.close() } catch (err) { }
   })
 }
 
-function main () {
+function main() {
   Promise.resolve().then(() => {
     killProcess(findPid())
     return updateAccounts()
@@ -99,7 +99,7 @@ function main () {
     console.info('ss accounts updated!')
     startss()
     notify('Update successfully!')
-    exitApp(500)
+    exitApp(300)
   }).catch(err => {
     console.error('Error:')
     console.error(err)
