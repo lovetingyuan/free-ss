@@ -7,6 +7,7 @@
     "@capacitor/core": "2.1.0",
     "@ionic-native/clipboard": "^5.25.0",
     "@ionic-native/core": "^5.25.0",
+    "@ionic-native/file": "^5.25.0",
     "@ionic-native/http": "^5.25.0",
     "@ionic/react": "^5.0.7",
     "@ionic/react-router": "^5.0.7",

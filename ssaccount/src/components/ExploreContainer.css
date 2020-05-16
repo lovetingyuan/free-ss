@@ -23,3 +23,7 @@
 .container a {
   text-decoration: none;
 }
+
+.small-text {
+  font-size: 12px;
+}
