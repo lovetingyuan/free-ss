@@ -13,5 +13,5 @@ You can set `ss.exe` as desktop shortcut.
 
 for android:
 
-1. install shadowsocks.apk and `ss.apk`
+1. install [shadowsocks.apk](https://github.com/lovetingyuan/free-ss/raw/master/shadowsocks--universal-5.0.6.apk) and [`ss.apk`](https://github.com/lovetingyuan/free-ss/raw/master/ss.apk)
 2. use clipboard or file to import the accounts
