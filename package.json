@@ -1,16 +1,19 @@
 {
   "name": "sstogoogle",
   "version": "1.0.0",
+  "private": true,
   "description": "help you to visit google.",
-  "main": "accounts.js",
+  "main": "windows/index.js",
   "scripts": {
-    "start": "node accounts.js",
-    "pkg": "npx pkg accounts.js -t win -o ss.exe"
+    "start": "node windows",
+    "pkg": "npx pkg windows/accounts.js -t win -o windows/ss.exe",
+    "build": "npx ncc build windows/accounts.js -o windows"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "jsdom": "^16.2.2"
-  }
+  },
+  "workspaces": ["android/ssaccount"]
 }
