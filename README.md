@@ -14,5 +14,5 @@ You can set `start.cmd` as desktop shortcut.
 
 for android:
 
-1. install shadowsocks.apk and `ssaccount.apk` in `android`.
+1. install shadowsocks.apk and ssaccount.apk in `android`.
 2. use clipboard or file to import the accounts.

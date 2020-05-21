@@ -36,6 +36,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "ionic:build:after": "rimraf build/static/js/*.map && rimraf build/static/css/*.map",
     "android": "ionic capacitor run android --livereload --device --external",
     "sync": "ionic capacitor sync android --prod"
   },
@@ -55,7 +56,8 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "2.1.0"
+    "@capacitor/cli": "2.1.0",
+    "rimraf": "^3.0.2"
   },
   "description": "An Ionic project"
 }

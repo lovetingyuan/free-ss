@@ -1,8 +1,8 @@
 {
-  "appId": "io.ionic.starter",
+  "appId": "foo.bar.ssaccount",
   "appName": "ssaccount",
   "bundledWebRuntime": false,
-  "npmClient": "npm",
+  "npmClient": "yarn",
   "webDir": "build",
   "plugins": {
     "SplashScreen": {

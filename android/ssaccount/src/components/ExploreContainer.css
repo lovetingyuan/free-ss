@@ -3,7 +3,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: 50%;
+  top: 40%;
   padding: 0 40px;
   transform: translateY(-50%);
 }
@@ -26,4 +26,8 @@
 
 .small-text {
   font-size: 12px;
+}
+
+ion-button.ss {
+  --background: #607D8B;
 }

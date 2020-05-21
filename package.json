@@ -7,13 +7,13 @@
   "scripts": {
     "start": "node windows",
     "pkg": "npx pkg windows/accounts.js -t win -o windows/ss.exe",
-    "build": "npx ncc build windows/accounts.js -o windows"
+    "build": "npx ncc build windows/accounts.js -o windows",
+    "build:android": "cd android/ssaccount && yarn sync"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "jsdom": "^16.2.2"
-  },
-  "workspaces": ["android/ssaccount"]
+  }
 }
