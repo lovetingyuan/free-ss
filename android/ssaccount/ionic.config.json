@@ -3,5 +3,9 @@
   "integrations": {
     "capacitor": {}
   },
-  "type": "react"
+  "type": "react",
+  "hooks": {
+    "build:before": "./scripts/disableScopeModuleCheck.js",
+    "serve:before": "./scripts/disableScopeModuleCheck.js"
+  }
 }

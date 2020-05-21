@@ -2,6 +2,7 @@ const { JSDOM } = require('jsdom')
 const fs = require('fs')
 const path = require('path')
 const childProcess = require('child_process')
+const fetchData = require('../lib/data')
 
 const defaultGuiConfig = {
   "version": "4.1.10.0",
@@ -59,7 +60,7 @@ if (process.platform !== 'win32') {
   process.exit(0)
 }
 
-const SS = 'Shadowsocks.exe'
+const SS = fs.readdirSync(__dirname).find(v => v.startsWith('Shadowsocks') && v.endsWith('.exe'))
 
 function notify(title, message) {
   const bin = path.posix.join(__dirname, 'snoretoast-x86.exe')
@@ -110,29 +111,17 @@ const dirname = /snapshot/.test(__dirname) ? process.cwd() : __dirname
 const CONFIGPATH = path.resolve(dirname, 'gui-config.json')
 
 function updateAccounts() {
-  return JSDOM.fromURL('https://my.ishadowx.biz/?_t=' + Date.now(), {
+  return JSDOM.fromURL(fetchData.url + '?_t=' + Date.now(), {
   }).then(dom => {
     const doc = dom.window.document
-    const items = [...doc.querySelectorAll('.portfolio-item')]
+    const accounts = fetchData.callback(doc)
     let guiConfig
     try {
       guiConfig = require('./gui-config.json')
     } catch (err) {
       guiConfig = defaultGuiConfig
     }
-    guiConfig.configs = []
-    items.forEach(item => {
-      const account = []
-      item.querySelectorAll('h4').forEach((h4, i) => {
-        const value = h4.textContent.split(':')[1]
-        if (value) {
-          account.push(i === 1 ? parseInt(value.trim(), 10) : value.trim())
-        }
-      })
-      if (account.length === 4) {
-        guiConfig.configs.push(genAccount(account))
-      }
-    })
+    guiConfig.configs = accounts.map(account => genAccount(account))
     fs.writeFileSync(CONFIGPATH, JSON.stringify(guiConfig, null, 2))
     try { dom.window.close() } catch (err) { }
   })

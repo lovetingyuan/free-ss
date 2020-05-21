@@ -8,6 +8,8 @@ import { File } from '@ionic-native/file';
 import { Plugins } from "@capacitor/core";
 import { document as documentIcon } from 'ionicons/icons';
 
+import fetchData from '../../../../lib/data'
+
 interface ContainerProps { }
 
 // server port password method
@@ -15,40 +17,17 @@ type Account = [string, number, string, string]
 
 const { CustomNativePlugin } = Plugins;
 
-// console.log(CustomNativePlugin.customCall().then((re: any) => {
-// console.log(998, re)
-// }),  CustomNativePlugin.customFunction().then((re: any) => {
-//   console.log(88, re)
-// }))
-
 function getAccounts(type: 'string' | 'list') {
-  return HTTP.get('https://my.ishadowx.biz/?_t=' + Date.now(), {}, {
+  return HTTP.get(fetchData.url + '?_t=' + Date.now(), {}, {
     'user-agent': 'no-' + Date.now()
   }).then(res => {
     const domparser = new DOMParser()
     const doc = domparser.parseFromString(res.data, 'text/html')
-    const items = [...doc.querySelectorAll('.portfolio-item')]
-    const accounts: (string | Account)[] = []
-    items.forEach(item => {
-      const account: Account = [] as any
-      item.querySelectorAll('h4').forEach((h4, i) => {
-        if (!h4) return
-        const value = ((h4 as HTMLElement).textContent as string).split(':')[1]
-        if (value) {
-          account.push(i === 1 ? parseInt(value.trim(), 10) : value.trim())
-        }
-      })
-      if (account.length === 4) {
-        //  server port password method
-        if (type === 'string') {
-          const ssurl = `ss://${btoa(account[3] + ':' + account[2])}@${account[0]}:${account[1]}`
-          accounts.push(ssurl)
-        } else {
-          accounts.push(account)
-        }
-      }
-    })
-    return accounts
+    const accounts = fetchData.callback(doc)
+    if (type === 'list') {
+      return accounts
+    }
+    return accounts.map(account => `ss://${btoa(account[3] + ':' + account[2])}@${account[0]}:${account[1]}`)
   })
 }
 
@@ -60,16 +39,18 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
   function handleclipboard() {
     setShowLoading(true)
     getAccounts('string').then((accounts) => {
+      console.log(accounts)
       return Clipboard.copy(accounts.join('\n'))
     }).then(() => {
       setShowToast(['账号已经复制到粘贴板', true])
-    }).catch(() => {
+    }).catch((err) => {
+      console.error(err)
       setShowToast(['账号复制失败', true])
     }).finally(() => {
       setShowLoading(false)
     })
   }
-  const exportfilepath = File.externalApplicationStorageDirectory.split('0')[1] + 'ssaccounts.json'
+  const exportfilepath = (File.externalApplicationStorageDirectory || '').split('0')[1] + 'ssaccounts.json'
 
   function handleexportfile() {
     setShowLoading(true)
