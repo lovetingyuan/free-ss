@@ -7,8 +7,9 @@
   "scripts": {
     "start": "node windows",
     "pkg": "npx pkg windows/accounts.js -t win -o windows/ss.exe",
-    "build": "npx ncc build windows/accounts.js -o windows",
-    "build:android": "cd android/ssaccount && yarn sync"
+    "build": "npx ncc build windows/accounts.js -o windows -m",
+    "build:android": "cd android/ssaccount && yarn sync",
+    "dev:android": "cd android/ssaccount && yarn android"
   },
   "keywords": [],
   "author": "",
