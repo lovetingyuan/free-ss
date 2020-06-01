@@ -8,3 +8,9 @@ user-rule.txt
 dist/
 xhr-sync-worker.js
 
+snoretoast-x64.exe
+snoretoast-x86.exe
+notifu64.exe
+
+terminal-notifier
+

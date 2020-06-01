@@ -4,6 +4,13 @@ const path = require('path')
 const childProcess = require('child_process')
 const fetchData = require('../lib/data')
 
+const WindowsBalloon = require('node-notifier').WindowsBalloon;
+
+const notifier = new WindowsBalloon({
+  withFallback: false, // Try Windows Toast and Growl first?
+  customPath: path.resolve(__dirname, 'notifu.exe') // Relative/Absolute path if you want to use your fork of notifu
+});
+
 const defaultGuiConfig = {
   "version": "4.1.10.0",
   "configs": [],
@@ -54,7 +61,6 @@ const defaultGuiConfig = {
   }
 }
 
-
 if (process.platform !== 'win32') {
   console.log('sorry, this script could only run at windows os.')
   process.exit(0)
@@ -63,10 +69,21 @@ if (process.platform !== 'win32') {
 const SS = fs.readdirSync(__dirname).find(v => v.startsWith('Shadowsocks') && v.endsWith('.exe'))
 
 function notify(title, message) {
-  const bin = path.posix.join(__dirname, 'snoretoast-x86.exe')
-  return childProcess.spawn(bin, ['-t', title, '-m', message || title, '-silent'], {
-    detached: true
-  })
+  notifier.notify(
+    {
+      title,
+      message: message || title,
+      sound: false, // true | false.
+      time: 1000, // How long to show balloon in ms
+      wait: false, // Wait for User Action against Notification
+      type: 'info' // The notification type : info | warn | error
+    },
+    function (error, response) {
+      setTimeout(() => {
+        process.exit(0)
+      }, 100);
+    }
+  );
 }
 
 function findPid() {
@@ -132,11 +149,9 @@ function main() {
     killProcess(findPid())
     return updateAccounts()
   }).then(() => {
-    console.info('ss accounts updated!')
+    console.info('✈️  SS accounts updated!')
     startss()
     notify('Update successfully!')
-  }).then(() => {
-    process.exit(0)
   }).catch(err => {
     console.error('Error:')
     console.error(err)
