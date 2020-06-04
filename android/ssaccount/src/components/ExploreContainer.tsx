@@ -7,8 +7,9 @@ import getConfig from './getConfig'
 import { File } from '@ionic-native/file';
 import { document as documentIcon } from 'ionicons/icons';
 import { AppLauncher } from '@ionic-native/app-launcher';
+import parseQR from './parseQR'
 
-import fetchData from '../../../../lib/data'
+import fetchConfig from '../../../../lib/data'
 
 interface ContainerProps { }
 
@@ -16,16 +17,47 @@ interface ContainerProps { }
 type Account = [string, number, string, string]
 
 function getAccounts(type: 'string' | 'list') {
-  return HTTP.get(fetchData.url + '?_t=' + Date.now(), {}, {
+  return HTTP.get(fetchConfig.normal.url + '?_t=' + Date.now(), {}, {
     'user-agent': 'no-' + Math.random()
   }).then(res => {
     const domparser = new DOMParser()
     const doc = domparser.parseFromString(res.data, 'text/html')
-    const accounts = fetchData.callback(doc)
+    const accounts = fetchConfig.normal.callback(doc)
     if (type === 'list') {
       return accounts
     }
     return accounts.map(account => `ss://${btoa(account[3] + ':' + account[2])}@${account[0]}:${account[1]}`)
+  })
+}
+
+function getAccountsByQR (type: 'list' | 'string') {
+  return HTTP.get(fetchConfig.qrcode.url + '?_t=' + Date.now(), {}, {
+    'user-agent': 'no-' + Math.random()
+  }).then(res => {
+    const uris = fetchConfig.qrcode.callback(res.data) as string[]
+    const accounts: any[] = []
+    return new Promise((resolve, reject) => {
+      uris.forEach(base64 => {
+        parseQR(base64).then((account: Account) => {
+          accounts.push(account)
+        }).catch(() => {
+          accounts.push(null)
+        }).finally(() => {
+          if (accounts.length === uris.length) {
+            const _accounts = accounts.filter(Boolean)
+            if (!_accounts.length) {
+              reject(new Error('no available accounts.'))
+            } else {
+              if (type === 'list') {
+                resolve(_accounts)
+              } else {
+                resolve(_accounts.map(a => `ss://${btoa(a[3] + ':' + a[2])}@${a[0]}:${a[1]}`))
+              }
+            }
+          }
+        })
+      })
+    })
   })
 }
 
@@ -49,9 +81,10 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
 
   function handleclipboard() {
     setShowLoading(true)
-    getAccounts('string').then((accounts) => {
-      console.log(accounts)
-      return Clipboard.copy(accounts.join('\n'))
+    getAccounts('string').catch(() => {
+      return getAccountsByQR('string')
+    }).then((accounts) => {
+      return Clipboard.copy((accounts as string[]).join('\n'))
     }).then(() => {
       setShowToast(['账号已经复制到粘贴板', true])
     }).catch((err) => {
@@ -66,7 +99,9 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
     setShowLoading(true)
     setexportfilepath('')
     // File
-    getAccounts('list').then((accounts) => {
+    getAccounts('list').catch(() => {
+      return getAccountsByQR('list')
+    }).then((accounts) => {
       const _accounts = accounts as Account[]
       return File.writeFile(
         File.externalApplicationStorageDirectory,
@@ -94,8 +129,6 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
       AppLauncher.launch({
         packageName: 'com.github.shadowsocks'
       })
-    } else {
-      setShowToast(['在浏览器下载Shadowsocks应用', true])
     }
   }
 
@@ -116,12 +149,12 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
         导出到文件
       </IonButton>
       <br/>
-      <p style={{textAlign: 'left'}} hidden={exportfilepath.length == 0}>
+      <p style={{textAlign: 'left'}} hidden={exportfilepath.length === 0}>
         <IonIcon style={{verticalAlign: 'middle', marginRight: '8px'}} icon={documentIcon}></IonIcon>{exportfilepath}
       </p>
       <br/> <br/>
       <IonButton className="ss" shape="round" disabled={!checked} onClick={handleOpenSS}>
-        {ssinstalled ? '打开ShadowSocks' : <a style={{color: 'white'}} href="https://github.com/shadowsocks/shadowsocks-android/releases" target="_blank" rel="noreferer noopener">下载安装Shadowsocks</a>}
+        {ssinstalled ? '打开ShadowSocks' : <a style={{color: 'white'}} href="https://github.com/shadowsocks/shadowsocks-android/releases" target="_blank" rel="noreferrer noopener">下载安装Shadowsocks</a>}
       </IonButton>
       <IonToast
         isOpen={showtoast}
