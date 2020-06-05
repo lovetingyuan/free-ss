@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IonButton, IonToast, IonLoading, IonCheckbox, IonIcon } from '@ionic/react'
+import { IonButton, IonToast, IonLoading, IonCheckbox, IonIcon, IonNote } from '@ionic/react'
 import './ExploreContainer.css';
 import { Clipboard } from '@ionic-native/clipboard';
 import { HTTP } from '@ionic-native/http';
@@ -10,6 +10,8 @@ import { AppLauncher } from '@ionic-native/app-launcher';
 import parseQR from './parseQR'
 
 import fetchConfig from '../../../../lib/data'
+
+import pkg from '../../../../package.json'
 
 interface ContainerProps { }
 
@@ -68,6 +70,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
   const [ssinstalled, setssinstalled] = useState(false)
   const _exportfilepath = (File.externalApplicationStorageDirectory || '').split('0')[1] + 'ssaccounts.json'
   const [exportfilepath, setexportfilepath] = useState('')
+  const [updateLink, setUpdateLink] = useState('')
 
   useEffect(() => {
     AppLauncher.canLaunch({
@@ -77,6 +80,18 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
     }).catch(() => {
       setssinstalled(false)
     });
+    const headers = new Headers()
+    headers.append('content-type', 'application/json')
+    headers.append('accept', 'application/vnd.github.VERSION.raw')
+    fetch('https://api.github.com/repos/lovetingyuan/free-ss/contents/package.json', {
+      headers
+    }).then(res => res.json()).then(res => {
+      if (pkg.version !== res.version) {
+        setUpdateLink(`https://github.com/lovetingyuan/free-ss/blob/master/android/ssaccount-${res.version}.apk`)
+      }
+    }).catch(err => {
+      // console.log(err)
+    })
   }, [])
 
   function handleclipboard() {
@@ -156,6 +171,13 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
       <IonButton className="ss" shape="round" disabled={!checked} onClick={handleOpenSS}>
         {ssinstalled ? '打开ShadowSocks' : <a style={{color: 'white'}} href="https://github.com/shadowsocks/shadowsocks-android/releases" target="_blank" rel="noreferrer noopener">下载安装Shadowsocks</a>}
       </IonButton>
+      <br/>
+      {
+        updateLink ? <IonNote color="primary">
+          <br/> <br/>
+          <a href={updateLink} target="_blank" rel="noreferrer noopener">有新版本，点击下载</a>
+          </IonNote> : null
+      }
       <IonToast
         isOpen={showtoast}
         onDidDismiss={() => setShowToast(['', false])}
