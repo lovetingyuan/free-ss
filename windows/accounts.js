@@ -68,10 +68,10 @@ if (process.platform !== 'win32') {
 
 const SS = fs.readdirSync(__dirname).find(v => v.startsWith('Shadowsocks') && v.endsWith('.exe'))
 
-function notify(title, message, exit = true) {
+function notify(message, exit = true) {
   notifier.notify(
     {
-      title,
+      title: '✈️ SS Accounts',
       message: message || title,
       sound: false, // true | false.
       time: 1000, // How long to show balloon in ms
@@ -154,6 +154,10 @@ function getRequest(url, headers = {}) {
 }
 
 function writeAccounts (accounts) {
+  if (!accounts.length) {
+    notify('😔 暂无可用账号')
+    return
+  }
   let guiConfig
   try {
     guiConfig = require('./gui-config.json')
@@ -226,11 +230,11 @@ function checkUpdate () {
   getRequest('https://api.github.com/repos/lovetingyuan/free-ss/contents/package.json', {
     'content-type': 'application/json',
     accept: 'application/vnd.github.VERSION.raw',
-    'user-agent': 'nodejs-' + Date.now()
+    'user-agent': 'nodejs-chrome-' + Date.now()
   }).then(res => {
     res = JSON.parse(res)
     if (res.version !== pkg.version) {
-      notify('SS Accounts', '有新的版本', false)
+      notify('💡 有新的版本', false)
     }
   }).catch(() => {
 
@@ -238,7 +242,7 @@ function checkUpdate () {
 }
 
 function main() {
-  console.log('Please wait...')
+  console.log('🙂  Please wait...')
   checkUpdate()
   Promise.resolve().then(() => {
     killProcess(findPid())
@@ -249,11 +253,11 @@ function main() {
   }).then(() => {
     console.info('✈️  SS accounts updated!')
     startss()
-    notify('SS Accounts', 'Update successfully!')
+    notify('😊 更新成功')
   }).catch(err => {
     console.error('Error:')
     console.error(err)
-    notify('Update failed!', err && err.message)
+    notify('😔 更新失败')
   })
 }
 

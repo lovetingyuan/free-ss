@@ -1,6 +1,6 @@
 {
   "name": "sstogoogle",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": true,
   "description": "help you to visit google.",
   "main": "windows/index.js",
@@ -9,6 +9,7 @@
     "pkg": "npx pkg windows/accounts.js -t win -o windows/ss.exe",
     "build:windows": "npx ncc build windows/accounts.js -o windows -m",
     "build:android": "cd android/ssaccount && yarn sync",
+    "build": "npm run build:windows && npm run build:android",
     "dev:android": "cd android/ssaccount && yarn android"
   },
   "keywords": [],

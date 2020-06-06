@@ -25,10 +25,13 @@ function getAccounts(type: 'string' | 'list') {
     const domparser = new DOMParser()
     const doc = domparser.parseFromString(res.data, 'text/html')
     const accounts = fetchConfig.normal.callback(doc)
+    if (!accounts.length) {
+      return Promise.reject()
+    }
     if (type === 'list') {
       return accounts
     }
-    return accounts.map(account => `ss://${btoa(account[3] + ':' + account[2])}@${account[0]}:${account[1]}`)
+    return accounts.map(a => `ss://${btoa(a[3] + ':' + a[2])}@${a[0]}:${a[1]}`)
   })
 }
 
@@ -48,7 +51,7 @@ function getAccountsByQR (type: 'list' | 'string') {
           if (accounts.length === uris.length) {
             const _accounts = accounts.filter(Boolean)
             if (!_accounts.length) {
-              reject(new Error('no available accounts.'))
+              reject(new Error('暂无可用账号'))
             } else {
               if (type === 'list') {
                 resolve(_accounts)
@@ -71,6 +74,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
   const _exportfilepath = (File.externalApplicationStorageDirectory || '').split('0')[1] + 'ssaccounts.json'
   const [exportfilepath, setexportfilepath] = useState('')
   const [updateLink, setUpdateLink] = useState('')
+  const [coulduse, setcoulduse] = useState(true)
 
   useEffect(() => {
     AppLauncher.canLaunch({
@@ -89,12 +93,19 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
       if (pkg.version !== res.version) {
         setUpdateLink(`https://github.com/lovetingyuan/free-ss/blob/master/android/ssaccount-${res.version}.apk`)
       }
-    }).catch(err => {
+      if ((pkg as any).enabled === false) {
+        setcoulduse(false)
+      }
+    }).catch(() => {
       // console.log(err)
     })
   }, [])
 
   function handleclipboard() {
+    if (!coulduse) {
+      setShowToast(['APP暂时禁止使用', true])
+      return
+    }
     setShowLoading(true)
     getAccounts('string').catch(() => {
       return getAccountsByQR('string')
@@ -103,14 +114,17 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
     }).then(() => {
       setShowToast(['账号已经复制到粘贴板', true])
     }).catch((err) => {
-      console.error(err)
-      setShowToast(['账号复制失败', true])
+      setShowToast(['账号复制失败 ' + (err?.message || ''), true])
     }).finally(() => {
       setShowLoading(false)
     })
   }
 
   function handleexportfile() {
+    if (!coulduse) {
+      setShowToast(['APP暂时禁止使用', true])
+      return
+    }
     setShowLoading(true)
     setexportfilepath('')
     // File
@@ -132,7 +146,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
     }).catch((err) => {
       console.error(err)
       setexportfilepath('导出文件失败')
-      setShowToast(['导出文件失败', true])
+      setShowToast(['导出文件失败 ' + (err?.message || ''), true])
     }).finally(() => {
       setShowLoading(false)
     })

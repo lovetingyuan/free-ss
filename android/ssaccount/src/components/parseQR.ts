@@ -37,7 +37,12 @@ const parseQR = (base64: string): Promise<any> => {
       if (code) {
         const account = atob(code.data.slice(5)).trim()
         const [method, password, server, port] = account.split(/@|:/)
-        resolve([server, parseInt(port, 10), password, method])
+        const _account = [server, parseInt(port, 10), password, method]
+        if (_account.filter(Boolean).length === 4) {
+          resolve(_account)
+        } else {
+          reject(err)
+        }
       } else {
         reject(err)
       }
