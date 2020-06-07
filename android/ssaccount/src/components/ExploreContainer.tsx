@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { IonButton, IonToast, IonLoading, IonCheckbox, IonIcon, IonNote } from '@ionic/react'
 import './ExploreContainer.css';
 import { Clipboard } from '@ionic-native/clipboard';
@@ -10,10 +10,12 @@ import { AppLauncher } from '@ionic-native/app-launcher';
 import parseQR from './parseQR'
 
 import fetchConfig from '../../../../lib/data'
+import animation from './animation.json'
+import "@lottiefiles/lottie-player"
 
-import pkg from '../../../../package.json'
-
-interface ContainerProps { }
+interface ContainerProps {
+  enabled: boolean
+}
 
 // server port password method
 type Account = [string, number, string, string]
@@ -35,7 +37,7 @@ function getAccounts(type: 'string' | 'list') {
   })
 }
 
-function getAccountsByQR (type: 'list' | 'string') {
+function getAccountsByQR(type: 'list' | 'string') {
   return HTTP.get(fetchConfig.qrcode.url + '?_t=' + Date.now(), {}, {
     'user-agent': 'no-' + Math.random()
   }).then(res => {
@@ -66,15 +68,15 @@ function getAccountsByQR (type: 'list' | 'string') {
   })
 }
 
-const ExploreContainer: React.FC<ContainerProps> = () => {
+const ExploreContainer: React.FC<ContainerProps> = (props) => {
   const [[toastmsg, showtoast], setShowToast] = useState(['账号已经复制到粘贴板', false]);
   const [showLoading, setShowLoading] = useState(false)
   const [checked, setChecked] = useState(false)
   const [ssinstalled, setssinstalled] = useState(false)
   const _exportfilepath = (File.externalApplicationStorageDirectory || '').split('0')[1] + 'ssaccounts.json'
   const [exportfilepath, setexportfilepath] = useState('')
-  const [updateLink, setUpdateLink] = useState('')
-  const [coulduse, setcoulduse] = useState(true)
+  const coulduse = props.enabled
+  const animatorRef = useRef(null);
 
   useEffect(() => {
     AppLauncher.canLaunch({
@@ -87,17 +89,9 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
     const headers = new Headers()
     headers.append('content-type', 'application/json')
     headers.append('accept', 'application/vnd.github.VERSION.raw')
-    fetch('https://api.github.com/repos/lovetingyuan/free-ss/contents/package.json', {
-      headers
-    }).then(res => res.json()).then(res => {
-      if (pkg.version !== res.version) {
-        setUpdateLink(`https://github.com/lovetingyuan/free-ss/blob/master/android/ssaccount-${res.version}.apk`)
-      }
-      if ((pkg as any).enabled === false) {
-        setcoulduse(false)
-      }
-    }).catch(() => {
-      // console.log(err)
+    const player = document.querySelector("lottie-player") as any;
+    setTimeout(() => {
+      player.load(animation);
     })
   }, [])
 
@@ -163,35 +157,36 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
 
   return (
     <div className="container">
-      <div>免责声明：仅用于学习交流，禁止非法用途，否则一切风险后果自负。
-      <br />  同意上述&nbsp;
-        <IonCheckbox color="primary" style={{verticalAlign: 'text-top'}} checked={checked}
-          onIonChange={e => setChecked(e.detail.checked)} />
+      <div>
+        <div ref={animatorRef}>
+          <lottie-player background="transparent" speed="1" mode="normal"
+            style={{ width: '100%', height: '18vh', margin: '0 auto' }} loop autoplay></lottie-player>
+        </div>
+        <br />
+        <IonNote style={{ fontSize: '0.9em', color: '#555', textAlign: 'left' }}>
+          免责声明：仅用于学习交流，禁止非法用途，否则一切风险后果自负。
+          <p style={{ textAlign: 'center' }}>同意上述&nbsp;
+          <IonCheckbox color="primary" style={{ verticalAlign: 'text-top' }} checked={checked}
+              onIonChange={e => setChecked(e.detail.checked)} />
+          </p>
+        </IonNote>
+        <br />
+        <IonButton size="large" disabled={!checked} onClick={handleclipboard} color="success"
+          expand="block" shape="round">复制到粘贴板
+        </IonButton>
+        <br />
+        <IonButton size="large" disabled={!checked} onClick={handleexportfile} expand="block" shape="round">
+          导出到文件
+        </IonButton>
+        <p style={{ textAlign: 'left' }} hidden={exportfilepath.length === 0}>
+          <IonIcon style={{ verticalAlign: 'middle', marginRight: '8px' }} icon={documentIcon}></IonIcon>{exportfilepath}
+        </p>
       </div>
-      <br />
-      <br />
-      <IonButton size="large" disabled={!checked} onClick={handleclipboard} color="success"
-        expand="block" shape="round">复制到粘贴板
-      </IonButton>
-      <br/>
-      <IonButton size="large" disabled={!checked} onClick={handleexportfile} expand="block" shape="round">
-        导出到文件
-      </IonButton>
-      <br/>
-      <p style={{textAlign: 'left'}} hidden={exportfilepath.length === 0}>
-        <IonIcon style={{verticalAlign: 'middle', marginRight: '8px'}} icon={documentIcon}></IonIcon>{exportfilepath}
-      </p>
-      <br/> <br/>
-      <IonButton className="ss" shape="round" disabled={!checked} onClick={handleOpenSS}>
-        {ssinstalled ? '打开ShadowSocks' : <a style={{color: 'white'}} href="https://github.com/shadowsocks/shadowsocks-android/releases" target="_blank" rel="noreferrer noopener">下载安装Shadowsocks</a>}
-      </IonButton>
-      <br/>
-      {
-        updateLink ? <IonNote color="primary">
-          <br/> <br/>
-          <a href={updateLink} target="_blank" rel="noreferrer noopener">有新版本，点击下载</a>
-          </IonNote> : null
-      }
+      <div>
+        <IonButton className="ss" shape="round" disabled={!checked} onClick={handleOpenSS}>
+          {ssinstalled ? '打开ShadowSocks' : <a style={{ color: 'white' }} href="https://github.com/shadowsocks/shadowsocks-android/releases" target="_blank" rel="noreferrer noopener">下载安装Shadowsocks</a>}
+        </IonButton>
+      </div>
       <IonToast
         isOpen={showtoast}
         onDidDismiss={() => setShowToast(['', false])}
