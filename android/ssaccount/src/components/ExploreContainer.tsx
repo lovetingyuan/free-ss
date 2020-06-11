@@ -27,9 +27,6 @@ function getAccounts(type: 'string' | 'list') {
     const domparser = new DOMParser()
     const doc = domparser.parseFromString(res.data, 'text/html')
     const accounts = fetchConfig.normal.callback(doc)
-    if (!accounts.length) {
-      return Promise.reject()
-    }
     if (type === 'list') {
       return accounts
     }
@@ -42,27 +39,13 @@ function getAccountsByQR(type: 'list' | 'string') {
     'user-agent': 'no-' + Math.random()
   }).then(res => {
     const uris = fetchConfig.qrcode.callback(res.data) as string[]
-    const accounts: any[] = []
-    return new Promise((resolve, reject) => {
-      uris.forEach(base64 => {
-        parseQR(base64).then((account: Account) => {
-          accounts.push(account)
-        }).catch(() => {
-          accounts.push(null)
-        }).finally(() => {
-          if (accounts.length === uris.length) {
-            const _accounts = accounts.filter(Boolean)
-            if (!_accounts.length) {
-              reject(new Error('暂无可用账号'))
-            } else {
-              if (type === 'list') {
-                resolve(_accounts)
-              } else {
-                resolve(_accounts.map(a => `ss://${btoa(a[3] + ':' + a[2])}@${a[0]}:${a[1]}`))
-              }
-            }
-          }
-        })
+    return Promise.all(uris.map(base64 => {
+      return parseQR(base64).catch(() => {})
+    })).then((accounts: Account[]) => {
+      return accounts.filter(account => {
+        return Array.isArray(account) && account.filter(Boolean).length === 4
+      }).map(a => {
+        return type === 'list' ? a : `ss://${btoa(a[3] + ':' + a[2])}@${a[0]}:${a[1]}`
       })
     })
   })
@@ -101,14 +84,21 @@ const ExploreContainer: React.FC<ContainerProps> = (props) => {
       return
     }
     setShowLoading(true)
-    getAccounts('string').catch(() => {
-      return getAccountsByQR('string')
-    }).then((accounts) => {
+    Promise.all([
+      getAccounts('string').catch(() => {}),
+      getAccountsByQR('string').catch(() => {})
+    ]).then(([accounts1, accounts2]) => {
+      const accounts = [
+        ...Array.isArray(accounts1) ? accounts1 : [],
+        ...Array.isArray(accounts2) ? accounts2 : [],
+      ]
+      if (!accounts.length) {
+        setShowToast(['账号复制失败', true])
+        return
+      }
       return Clipboard.copy((accounts as string[]).join('\n'))
     }).then(() => {
       setShowToast(['账号已经复制到粘贴板', true])
-    }).catch((err) => {
-      setShowToast(['账号复制失败 ' + (err?.message || ''), true])
     }).finally(() => {
       setShowLoading(false)
     })
@@ -196,7 +186,7 @@ const ExploreContainer: React.FC<ContainerProps> = (props) => {
       <IonLoading
         isOpen={showLoading}
         onDidDismiss={() => setShowLoading(false)}
-        message="请稍候..."
+        message="请耐心等待..."
       />
     </div>
   );

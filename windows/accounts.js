@@ -132,6 +132,7 @@ const Delay = function () {
     this.reject = reject
   })
 }
+
 function getRequest(url, headers = {}) {
   const { promise, resolve, reject } = new Delay()
   const request = require(url.split(':')[0])
@@ -153,11 +154,7 @@ function getRequest(url, headers = {}) {
   return promise
 }
 
-function writeAccounts (accounts) {
-  if (!accounts.length) {
-    notify('😔 暂无可用账号')
-    return
-  }
+function writeAccounts(accounts) {
   let guiConfig
   try {
     guiConfig = require('./gui-config.json')
@@ -173,11 +170,10 @@ function updateAccounts() {
   const { JSDOM } = require('jsdom')
   return getRequest(fetchConfig.normal.url + '?_t=' + Date.now()).then(data => {
     const dom = new JSDOM(data);
-    const doc = dom.window.document
-    const accounts = fetchConfig.normal.callback(doc)
-    try { dom.window.close() } catch (err) {}
-    writeAccounts(accounts)
-  })
+    const accounts = fetchConfig.normal.callback(dom.window.document)
+    try { dom.window.close() } catch (err) { }
+    return accounts
+  }).catch(noop)
 }
 
 function updateAccountsByQR() {
@@ -188,45 +184,30 @@ function updateAccountsByQR() {
   const PNG = require('pngjs').PNG
   const jsQR = require('jsqr')
   return getRequest(fetchConfig.qrcode.url + '?_t=' + Date.now()).then(data => {
-    const { promise, resolve, reject } = new Delay()
-    const result = []
     const uris = fetchConfig.qrcode.callback(data)
-    if (!uris || !uris.length) {
-      return reject(new Error('no available accounts.'))
-    }
-    uris.forEach((base64, i) => {
-      const data = base64.replace(/^data:image\/\w+;base64,/, '');
+    const accounts = uris.map((base64, i) => {
+      base64 = base64.replace(/^data:image\/\w+;base64,/, '');
       const file = path.resolve(qrImgDist, i + '.png')
-      fs.writeFileSync(file, data, { encoding: 'base64' });
-      fs.createReadStream(file).pipe(new PNG()).on("parsed", function () {
-        const code = jsQR(this.data, this.width, this.height);
-        if (code) {
-          const account = Buffer.from(code.data.slice(5), 'base64').toString('utf8').trim()
-          const [method, password, server, port] = account.split(/@|:/)
-          result.push([server, port - 0, password, method])
-        } else {
-          result.push(null)
+      fs.writeFileSync(file, base64, { encoding: 'base64' });
+      const { data, width, height } = PNG.sync.read(fs.readFileSync(file));
+      const code = jsQR(data, width, height);
+      if (code) {
+        const account = Buffer.from(code.data.slice(5), 'base64').toString('utf8').trim()
+        const [method, password, server, port] = account.split(/@|:/)
+        const _account = [server, port - 0, password, method]
+        if (_account.filter(Boolean).length === 4) {
+          return _account
         }
-        if (result.length === uris.length) {
-          const accounts = result.filter(Boolean)
-          if (!accounts.length) {
-            reject(new Error('no available accounts.'))
-          } else {
-            resolve(accounts)
-          }
-        }
-      });
-    })
-    return promise
-  }).then(accounts => {
-    writeAccounts(accounts)
+      }
+    }).filter(Boolean)
     fs.readdirSync(qrImgDist).forEach(file => {
       fs.unlinkSync(path.join(qrImgDist, file))
     })
-  })
+    return accounts
+  }).catch(noop)
 }
 
-function checkUpdate () {
+function checkUpdate() {
   getRequest('https://api.github.com/repos/lovetingyuan/free-ss/contents/package.json', {
     'content-type': 'application/json',
     accept: 'application/vnd.github.VERSION.raw',
@@ -236,28 +217,30 @@ function checkUpdate () {
     if (res.version !== pkg.version) {
       notify('💡 有新的版本', false)
     }
-  }).catch(() => {
-
-  })
+  }).catch(noop)
 }
 
+function noop() {}
 function main() {
   console.log('🙂  Please wait...')
   checkUpdate()
-  Promise.resolve().then(() => {
-    killProcess(findPid())
-    return updateAccounts().catch(err => {
-      console.log(err.message)
-      return updateAccountsByQR()
-    })
-  }).then(() => {
-    console.info('✈️  SS accounts updated!')
-    startss()
-    notify('😊 更新成功')
-  }).catch(err => {
-    console.error('Error:')
-    console.error(err)
-    notify('😔 更新失败')
+  killProcess(findPid())
+  Promise.all([
+    updateAccounts(),
+    updateAccountsByQR()
+  ]).then(([accounts1, accounts2]) => {
+    const accounts = [
+      ...Array.isArray(accounts1) ? accounts1 : [],
+      ...Array.isArray(accounts2) ? accounts2 : [],
+    ]
+    if (!accounts.length) {
+      notify('暂无可用账号', false)
+    } else {
+      writeAccounts(accounts)
+      startss()
+      console.info('✈️  SS accounts updated!')
+      notify('😊 更新成功')
+    }
   })
 }
 

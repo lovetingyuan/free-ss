@@ -1,6 +1,6 @@
 {
   "name": "sstogoogle",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "private": true,
   "description": "help you to visit google.",
   "main": "windows/index.js",
