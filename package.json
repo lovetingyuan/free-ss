@@ -1,24 +1,20 @@
 {
-  "name": "sstogoogle",
-  "version": "0.0.8",
-  "private": true,
-  "description": "help you to visit google.",
-  "main": "windows/index.js",
+  "name": "free-ss",
+  "version": "1.0.0",
+  "description": "Help you to visit google.",
   "scripts": {
-    "start": "node windows",
-    "pkg": "npx pkg windows/accounts.js -t win -o windows/ss.exe",
-    "build:windows": "npx ncc build windows/accounts.js -o windows -m",
-    "build:android": "cd android/ssaccount && yarn sync",
-    "build": "npm run build:windows && npm run build:android",
+    "build": "cd windows && npm run build && cd ../android/ssaccount && yarn sync",
     "dev:android": "cd android/ssaccount && yarn android"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lovetingyuan/fq.git"
   },
   "keywords": [],
   "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "jsdom": "^16.2.2",
-    "jsqr": "^1.3.1",
-    "node-notifier": "^7.0.1",
-    "pngjs": "^5.0.0"
-  }
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lovetingyuan/fq/issues"
+  },
+  "homepage": "https://github.com/lovetingyuan/fq#readme"
 }

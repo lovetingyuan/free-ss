@@ -13,7 +13,7 @@ const Home: React.FC = () => {
     const headers = new Headers()
     headers.append('content-type', 'application/json')
     headers.append('accept', 'application/vnd.github.VERSION.raw')
-    fetch('https://api.github.com/repos/lovetingyuan/free-ss/contents/package.json', {
+    fetch('https://api.github.com/repos/lovetingyuan/free-ss/contents/android/ssaccount/package.json', {
       headers
     }).then(res => res.json()).then(res => {
       if (pkg.version !== res.version) {

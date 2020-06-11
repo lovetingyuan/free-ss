@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const childProcess = require('child_process')
 const fetchConfig = require('../lib/data')
-const pkg = require('../package.json')
+const pkg = require('./package.json')
 
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
@@ -208,7 +208,7 @@ function updateAccountsByQR() {
 }
 
 function checkUpdate() {
-  getRequest('https://api.github.com/repos/lovetingyuan/free-ss/contents/package.json', {
+  getRequest('https://api.github.com/repos/lovetingyuan/free-ss/contents/windows/package.json', {
     'content-type': 'application/json',
     accept: 'application/vnd.github.VERSION.raw',
     'user-agent': 'nodejs-chrome-' + Date.now()
