@@ -42,7 +42,7 @@
     "eject": "react-scripts eject",
     "ionic:build:after": "rimraf build/static/js/*.map && rimraf build/static/css/*.map",
     "android": "ionic capacitor run android --livereload --device --external",
-    "sync": "ionic capacitor sync android --prod"
+    "sync": "ionic build && ionic capacitor sync android --prod"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -63,5 +63,5 @@
     "@capacitor/cli": "2.1.0",
     "rimraf": "^3.0.2"
   },
-  "description": "ssssssssssssssssss"
+  "description": "Help you to visit google."
 }
