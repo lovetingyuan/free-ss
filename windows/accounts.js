@@ -3,6 +3,7 @@ const path = require('path')
 const childProcess = require('child_process')
 const fetchConfig = require('../lib/data')
 const pkg = require('./package.json')
+const got = require('got')
 
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
@@ -62,7 +63,7 @@ const defaultGuiConfig = {
 }
 
 if (process.platform !== 'win32') {
-  console.log('sorry, this script could only run at windows os.')
+  console.warn('Sorry, this program could only run at windows os.')
   process.exit(0)
 }
 
@@ -78,7 +79,7 @@ function notify(message, exit = true) {
       wait: false, // Wait for User Action against Notification
       type: 'info' // The notification type : info | warn | error
     },
-    function (error, response) {
+    function () {
       exit && setTimeout(() => {
         process.exit(0)
       }, 100);
@@ -124,34 +125,12 @@ const genAccount = ([server, port, password, method]) => {
   }
 }
 
-const dirname = /snapshot/.test(__dirname) ? process.cwd() : __dirname
-
-const Delay = function () {
-  this.promise = new Promise((resolve, reject) => {
-    this.resolve = resolve
-    this.reject = reject
-  })
-}
-
 function getRequest(url, headers = {}) {
-  const { promise, resolve, reject } = new Delay()
-  const request = require(url.split(':')[0])
-  const req = request.get(url, { headers }, function (res) {
-    if (res.statusCode !== 200) {
-      reject(new Error('Bad http code: ' + res.statusCode))
-      return
-    }
-    const bodyChunks = [];
-    res.on('data', function (chunk) {
-      bodyChunks.push(chunk);
-    }).on('end', function () {
-      const body = Buffer.concat(bodyChunks);
-      resolve(body.toString('utf8'))
-    }).on('error', reject)
-  });
-
-  req.on('error', reject);
-  return promise
+  return got(url, {
+    headers
+  }).then(res => {
+    return res.body;
+  })
 }
 
 function writeAccounts(accounts) {
@@ -162,7 +141,7 @@ function writeAccounts(accounts) {
     guiConfig = defaultGuiConfig
   }
   guiConfig.configs = accounts.map(account => genAccount(account))
-  const configPath = path.resolve(dirname, 'gui-config.json')
+  const configPath = path.resolve(__dirname, 'gui-config.json')
   fs.writeFileSync(configPath, JSON.stringify(guiConfig, null, 2))
 }
 
@@ -177,19 +156,13 @@ function updateAccounts() {
 }
 
 function updateAccountsByQR() {
-  const qrImgDist = path.join(__dirname, 'ss_qrimg_temp')
-  if (!fs.existsSync(qrImgDist)) {
-    fs.mkdirSync(qrImgDist)
-  }
   const PNG = require('pngjs').PNG
   const jsQR = require('jsqr')
   return getRequest(fetchConfig.qrcode.url + '?_t=' + Date.now()).then(data => {
     const uris = fetchConfig.qrcode.callback(data)
-    const accounts = uris.map((base64, i) => {
-      base64 = base64.replace(/^data:image\/\w+;base64,/, '');
-      const file = path.resolve(qrImgDist, i + '.png')
-      fs.writeFileSync(file, base64, { encoding: 'base64' });
-      const { data, width, height } = PNG.sync.read(fs.readFileSync(file));
+    const accounts = uris.map((base64) => {
+      const base64str = base64.replace(/^data:image\/\w+;base64,/, '');
+      const { data, width, height } = PNG.sync.read(Buffer.from(base64str, 'base64'));
       const code = jsQR(data, width, height);
       if (code) {
         const account = Buffer.from(code.data.slice(5), 'base64').toString('utf8').trim()
@@ -200,9 +173,6 @@ function updateAccountsByQR() {
         }
       }
     }).filter(Boolean)
-    fs.readdirSync(qrImgDist).forEach(file => {
-      fs.unlinkSync(path.join(qrImgDist, file))
-    })
     return accounts
   }).catch(noop)
 }
@@ -222,7 +192,7 @@ function checkUpdate() {
 
 function noop() {}
 function main() {
-  console.log('🙂  Please wait...')
+  console.log('🙂 Please wait...')
   checkUpdate()
   killProcess(findPid())
   Promise.all([
@@ -234,7 +204,7 @@ function main() {
       ...Array.isArray(accounts2) ? accounts2 : [],
     ]
     if (!accounts.length) {
-      notify('暂无可用账号', false)
+      notify('😔 暂无可用账号')
     } else {
       writeAccounts(accounts)
       startss()
