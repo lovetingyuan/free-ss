@@ -1,3 +1,3 @@
-node windows
+node windows/node
 
 exit
