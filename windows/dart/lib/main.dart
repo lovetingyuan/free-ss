@@ -26,5 +26,5 @@ void main(List<String> arguments) async {
   writeaccounts(allaccounts);
   startss();
   notify('成功: ${allaccounts.length}', '现在可以访问Google.');
-  print('完成!');
+  print('完成，可以访问：https://google.com');
 }
