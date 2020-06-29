@@ -1,3 +1,0 @@
-node windows
-
-exit

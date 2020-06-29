@@ -1,0 +1,16 @@
+ss_win_temp/
+gui-config.json
+NLog.config
+pac.txt
+statistics-config.json
+user-rule.txt
+
+dist/
+xhr-sync-worker.js
+
+snoretoast-x64.exe
+snoretoast-x86.exe
+
+terminal-notifier
+ss_qrimg_temp/
+qjs.exe

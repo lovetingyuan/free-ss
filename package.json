@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Help you to visit google.",
   "scripts": {
-    "build": "cd windows && yarn build && cd ../android/ssaccount && yarn sync",
+    "build": "cd windows/node && yarn build && cd ../../android/ssaccount && yarn sync",
     "dev:android": "cd android/ssaccount && yarn android"
   },
   "repository": {
