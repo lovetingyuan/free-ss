@@ -2,14 +2,14 @@
 
 Only for windows and android user.
 
-for windows:
+For windows:
 
-1. Clone this repo and [install `Nodejs`](https://nodejs.org/en/).
-2. Click `start.cmd` and you can visit [google](https://google.com).
+* If you do not [install `Nodejs`](https://nodejs.org/en/), click `windows/goss.cmd`.
+* If you have nodejs installed, click `windows/start.cmd`.
 
-BTW: you can set `start.cmd` as desktop shortcut([ss usage](https://github.com/shadowsocks/shadowsocks-windows/wiki/Shadowsocks-Windows-%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)).
+BTW: you can set `start.cmd` or `goss.cmd` as desktop shortcut.
 
-for android:
+For android:
 
-1. install shadowsocks.apk and ssaccount.apk in `android`.
-2. use clipboard or file to import the accounts.
+1. Install shadowsocks.apk and ssaccount.apk in `android`.
+2. Use clipboard or file to import the accounts.

@@ -7,7 +7,11 @@ const got = require('got')
 const os = require('os')
 
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
-const ssdir = path.resolve(__dirname, '../ss');
+
+let ssdir = path.resolve(__dirname, '../ss');
+if (__filename.endsWith('index.js')) {
+  ssdir = path.resolve(__dirname, '../../ss')
+}
 
 const notifier = new WindowsBalloon({
   withFallback: false, // Try Windows Toast and Growl first?
@@ -101,7 +105,7 @@ function startss() {
       }
     }
   }
-  const bin = path.posix.join(ssdir, SS)
+  const bin = path.join(ssdir, SS)
   return childProcess.spawn(bin, {
     detached: true
   })
@@ -174,7 +178,7 @@ function updateAccountsByQR() {
 }
 
 function checkUpdate() {
-  getRequest('https://api.github.com/repos/lovetingyuan/free-ss/contents/windows/package.json', {
+  getRequest('https://api.github.com/repos/lovetingyuan/free-ss/contents/windows/node/package.json', {
     'content-type': 'application/json',
     accept: 'application/vnd.github.VERSION.raw',
     'user-agent': 'nodejs-chrome-' + Date.now()

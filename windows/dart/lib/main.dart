@@ -1,6 +1,6 @@
 import 'htmlstr.dart';
 import 'qrcode.dart';
-import 'dart:io' show Platform;
+import 'dart:io' show Platform, sleep;
 import 'notify.dart';
 import 'startss.dart';
 import 'writeaccounts.dart';
@@ -21,10 +21,12 @@ void main(List<String> arguments) async {
   } catch (__) {}
   if (allaccounts.isEmpty) {
     notify('失败', '暂无可用账号.');
-    return;
+    sleep(Duration(seconds: 3));
+  } else {
+    writeaccounts(allaccounts);
+    startss();
+    notify('成功: ${allaccounts.length}', '现在可以访问Google.');
+    print('完成，可以访问：https://google.com');
+    sleep(Duration(seconds: 1));
   }
-  writeaccounts(allaccounts);
-  startss();
-  notify('成功: ${allaccounts.length}', '现在可以访问Google.');
-  print('完成，可以访问：https://google.com');
 }

@@ -1,7 +1,7 @@
 name: ssaccounts
 description: Help you to visit google.
-# version: 0.0.1
-# homepage: https://github.com/lovetingyuan/free-ss
+version: 0.0.1
+homepage: https://github.com/lovetingyuan/free-ss
 
 environment:
   sdk: '>=2.8.1 <3.0.0'
