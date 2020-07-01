@@ -1,3 +1,5 @@
+library ssaccounts;
+
 import 'htmlstr.dart';
 import 'qrcode.dart';
 import 'dart:io' show Platform, sleep;

@@ -1,5 +1,4 @@
 import 'dart:convert' show utf8, base64Decode;
-import 'package:http/http.dart' as http;
 import 'request.dart';
 
 List<String> _base64callback(String htmlstr) {
@@ -24,13 +23,11 @@ Future<String> _parseqrcode(String base64str) async {
 
 Future<List<Map<String, Object>>> getaccountsbyqrcode() async {
   const url = 'https://io.freess.info/';
-  var client = http.Client();
-  final response = await client.get(Uri.parse(url));
-  client.close();
-  if (response.statusCode != 200) {
+  final htmlstr = await request(url);
+  if (htmlstr.isEmpty) {
     return [];
   }
-  var base64list = _base64callback(response.body);
+  var base64list = _base64callback(htmlstr);
   var accounts = base64list.map((element) async {
     var ssurl = await _parseqrcode(element);
     if (ssurl.isEmpty) {
