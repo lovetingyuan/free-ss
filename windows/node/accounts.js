@@ -18,55 +18,7 @@ const notifier = new WindowsBalloon({
   customPath: path.join(ssdir, `notifu${os.arch() === 'x64' ? '64' : ''}.exe`) // Relative/Absolute path if you want to use your fork of notifu
 });
 
-const defaultGuiConfig = {
-  "version": "4.1.10.0",
-  "configs": [],
-  "strategy": "com.shadowsocks.strategy.ha",
-  "index": -1,
-  "global": false,
-  "enabled": true,
-  "shareOverLan": false,
-  "isDefault": false,
-  "isIPv6Enabled": false,
-  "localPort": 1080,
-  "portableMode": true,
-  "showPluginOutput": true,
-  "pacUrl": null,
-  "gfwListUrl": null,
-  "useOnlinePac": false,
-  "secureLocalPac": true,
-  "availabilityStatistics": false,
-  "autoCheckUpdate": true,
-  "checkPreRelease": false,
-  "isVerboseLogging": true,
-  "logViewer": {
-    "topMost": false,
-    "wrapText": false,
-    "toolbarShown": false,
-    "Font": "Consolas, 8pt",
-    "BackgroundColor": "Black",
-    "TextColor": "White"
-  },
-  "proxy": {
-    "useProxy": false,
-    "proxyType": 0,
-    "proxyServer": "",
-    "proxyPort": 0,
-    "proxyTimeout": 3,
-    "useAuth": false,
-    "authUser": "",
-    "authPwd": ""
-  },
-  "hotkey": {
-    "SwitchSystemProxy": "",
-    "SwitchSystemProxyMode": "",
-    "SwitchAllowLan": "",
-    "ShowLogs": "",
-    "ServerMoveUp": "",
-    "ServerMoveDown": "",
-    "RegHotkeysAtStartup": false
-  }
-}
+const defaultGuiConfig = require('../ss/_gui-config.default.json')
 
 if (process.platform !== 'win32') {
   console.warn('Sorry, this program could only run at windows os.')
