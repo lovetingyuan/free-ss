@@ -6,6 +6,7 @@ import 'dart:io' show Platform, sleep;
 import 'notify.dart';
 import 'startss.dart';
 import 'writeaccounts.dart';
+import 'consts.dart';
 
 void main(List<String> arguments) async {
   if (!Platform.isWindows) {
@@ -13,7 +14,7 @@ void main(List<String> arguments) async {
     return;
   }
   print('正在启动，请稍候...');
-  List<Map<String, Object>> allaccounts = [];
+  List<Account> allaccounts = [];
   try {
     var accounts = await Future.wait([
       getaccountsbyqrcode(),

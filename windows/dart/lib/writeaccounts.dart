@@ -1,14 +1,14 @@
 import 'dart:convert' show jsonEncode, jsonDecode;
 import 'dart:io' show File;
 import 'package:path/path.dart' as path;
-import 'consts.dart' show ssdir, defaultguiconfig, guiconfigfilename;
+import 'consts.dart';
 
 Object _genaccountsconfig (account) {
   return {
-    'server': account['server'],
-    'server_port': account['port'],
-    'password': account['password'],
-    'method': account['method'],
+    'server': account.server,
+    'server_port': account.port,
+    'password': account.password,
+    'method': account.method,
     'plugin': '',
     'plugin_opts': '',
     'plugin_args': '',
@@ -17,7 +17,7 @@ Object _genaccountsconfig (account) {
   };
 }
 
-void writeaccounts (List<Map<String, Object>> accounts) {
+void writeaccounts (List<Account> accounts) {
   var guiconfigpath = path.join(ssdir, guiconfigfilename);
   var guiconfigfile = File(guiconfigpath);
   var guiconfig = defaultguiconfig;

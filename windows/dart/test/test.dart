@@ -1,5 +1,18 @@
 import 'dart:io';
 
+class Item {
+  String url;
+  Function callback;
+  Item (this.url, this.callback);
+}
+
 void main () {
-  sleep(Duration(seconds: 3));
+  var a = Item('sdfsdf', () {
+    return 'sdfsdjkf';
+  });
+  print(a.url);
+  var aa = a.callback;
+  
+  print(aa());
+  // print(a.callback());
 }

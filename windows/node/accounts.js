@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const childProcess = require('child_process')
-const fetchConfig = require('../../lib/data')
+const accountsProviders = require('../../lib/node')
 const pkg = require('./package.json')
 const got = require('got')
 const os = require('os')
@@ -13,11 +13,6 @@ if (__filename.endsWith('index.js')) {
   ssdir = path.resolve(__dirname, '../../ss')
 }
 
-const notifier = new WindowsBalloon({
-  withFallback: false, // Try Windows Toast and Growl first?
-  customPath: path.join(ssdir, `notifu${os.arch() === 'x64' ? '64' : ''}.exe`) // Relative/Absolute path if you want to use your fork of notifu
-});
-
 const defaultGuiConfig = require('../ss/_gui-config.default.json')
 
 if (process.platform !== 'win32') {
@@ -28,7 +23,11 @@ if (process.platform !== 'win32') {
 const SS = fs.readdirSync(ssdir).find(v => v.startsWith('Shadowsocks') && v.endsWith('.exe'))
 
 function notify(message, exit = true) {
-  notifier.notify(
+  notify.notifier = notify.notifier || new WindowsBalloon({
+    withFallback: false, // Try Windows Toast and Growl first?
+    customPath: path.join(ssdir, `notifu${os.arch() === 'x64' ? '64' : ''}.exe`) // Relative/Absolute path if you want to use your fork of notifu
+  });
+  notify.notifier.notify(
     {
       title: '✈️ SS Accounts',
       message: message || title,
@@ -63,7 +62,7 @@ function startss() {
   })
 }
 
-const genAccount = ([server, port, password, method]) => {
+const genAccount = ({server, port, password, method}) => {
   return {
     "server": server,
     "server_port": port,
@@ -75,14 +74,6 @@ const genAccount = ([server, port, password, method]) => {
     "remarks": "",
     "timeout": 10
   }
-}
-
-function getRequest(url, headers = {}) {
-  return got(url, {
-    headers
-  }).then(res => {
-    return res.body;
-  })
 }
 
 function writeAccounts(accounts) {
@@ -97,70 +88,39 @@ function writeAccounts(accounts) {
   fs.writeFileSync(configPath, JSON.stringify(guiConfig, null, 2))
 }
 
-function updateAccounts() {
-  const { JSDOM } = require('jsdom')
-  return getRequest(fetchConfig.normal.url + '?_t=' + Date.now()).then(data => {
-    const dom = new JSDOM(data);
-    const accounts = fetchConfig.normal.callback(dom.window.document)
-    try { dom.window.close() } catch (err) { }
-    return accounts
-  }).catch(noop)
-}
-
-function updateAccountsByQR() {
-  const PNG = require('pngjs').PNG
-  const jsQR = require('jsqr')
-  return getRequest(fetchConfig.qrcode.url + '?_t=' + Date.now()).then(data => {
-    const uris = fetchConfig.qrcode.callback(data)
-    const accounts = uris.map((base64) => {
-      const base64str = base64.replace(/^data:image\/\w+;base64,/, '');
-      const { data, width, height } = PNG.sync.read(Buffer.from(base64str, 'base64'));
-      const code = jsQR(data, width, height);
-      if (code) {
-        const account = Buffer.from(code.data.slice(5), 'base64').toString('utf8').trim()
-        const [method, password, server, port] = account.split(/@|:/)
-        const _account = [server, port - 0, password, method]
-        if (_account.filter(Boolean).length === 4) {
-          return _account
-        }
-      }
-    }).filter(Boolean)
-    return accounts
-  }).catch(noop)
-}
-
 function checkUpdate() {
-  getRequest('https://api.github.com/repos/lovetingyuan/free-ss/contents/windows/node/package.json', {
-    'content-type': 'application/json',
-    accept: 'application/vnd.github.VERSION.raw',
-    'user-agent': 'nodejs-chrome-' + Date.now()
+  got('https://api.github.com/repos/lovetingyuan/free-ss/contents/windows/node/package.json', {
+    headers: {
+      'content-type': 'application/json',
+      accept: 'application/vnd.github.VERSION.raw',
+      'user-agent': 'nodejs-chrome-' + Date.now()
+    }
   }).then(res => {
-    res = JSON.parse(res)
+    res = JSON.parse(res.body)
     if (res.version !== pkg.version) {
       notify('💡 有新的版本', false)
     }
-  }).catch(noop)
+  }).catch(() => {})
 }
 
-function noop() {}
 function main() {
-  console.log('🙂 Please wait...')
+  console.log(' 🙂 Please wait...')
   checkUpdate()
-  Promise.all([
-    updateAccounts(),
-    updateAccountsByQR()
-  ]).then(([accounts1, accounts2]) => {
-    const accounts = [
-      ...Array.isArray(accounts1) ? accounts1 : [],
-      ...Array.isArray(accounts2) ? accounts2 : [],
-    ]
+  const tasks = accountsProviders.map(provider => {
+    const { url, callback } = provider
+    return got(url + '?_t=' + Date.now(), {
+      headers: {}
+    }).then(res => callback(res.body)).catch(err => [])
+  })
+  Promise.all(tasks).then(([accounts1, accounts2]) => {
+    const accounts = accounts1.concat(accounts2)
     if (!accounts.length) {
       notify('😔 暂无可用账号')
     } else {
       writeAccounts(accounts)
       startss()
       console.info('✈️  SS accounts updated!')
-      notify('😊 更新成功')
+      notify('😊 更新成功:' + accounts.length)
     }
   })
 }

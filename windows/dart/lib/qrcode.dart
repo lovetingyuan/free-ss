@@ -1,5 +1,6 @@
 import 'dart:convert' show utf8, base64Decode;
 import 'request.dart';
+import 'consts.dart';
 
 List<String> _base64callback(String htmlstr) {
   var exp = RegExp('"data:image.+?"', multiLine: true);
@@ -21,7 +22,7 @@ Future<String> _parseqrcode(String base64str) async {
   return '';
 }
 
-Future<List<Map<String, Object>>> getaccountsbyqrcode() async {
+Future<List<Account>> getaccountsbyqrcode() async {
   const url = 'https://io.freess.info/';
   final htmlstr = await request(url);
   if (htmlstr.isEmpty) {
@@ -37,12 +38,7 @@ Future<List<Map<String, Object>>> getaccountsbyqrcode() async {
     var parsedstr = utf8.decode(base64Decode(base64)).trim();
     var parsedlist = parsedstr.split(RegExp('@|:'));
     if (parsedlist.every((element) => element.isNotEmpty)) {
-      return {
-        'server': parsedlist[2],
-        'port': int.parse(parsedlist[3]),
-        'password': parsedlist[1],
-        'method': parsedlist[0]
-      };
+      return Account(parsedlist[2], parsedlist[3], parsedlist[1], parsedlist[0]);
     }
     return null;
   }).toList();

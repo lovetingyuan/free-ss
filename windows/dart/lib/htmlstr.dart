@@ -1,33 +1,25 @@
 import 'package:html/parser.dart';
-import 'package:html/dom.dart';
+import 'consts.dart';
 
 import 'request.dart';
 
-List<Map<String, Object>> _documentcallback(Document doc) {
-  List<Map<String, Object>> accounts = [];
+Future<List<Account>> getaccountsbyhtmlstr() async {
+  var htmlstr = await request('https://3.weiwei.in/2020.html');
+  List<Account> accounts = [];
+  if (htmlstr.isEmpty) return accounts;
+  var doc = parse(htmlstr);
   doc.querySelectorAll('table tr').forEach((tr) {
     var tds = tr.querySelectorAll('td');
     if (tds.length < 4) return;
-    Map<String, Object> account = {};
-    var order = ['server', 'port', 'method', 'password'];
-    for (var i = 0; i < 4; i++) {
-      var val = tds[i].text.trim();
-      if (val.isEmpty) {
-        return;
-      }
-      account[order[i]] = i == 1 ? int.parse(val) : val;
-    }
-    accounts.add(account);
+    var server = tds[0].text.trim();
+    if (server.isEmpty) return;
+    var port = tds[1].text.trim();
+    if (port.isEmpty) return;
+    var method = tds[2].text.trim();
+    if (method.isEmpty) return;
+    var password = tds[3].text.trim();
+    if (password.isEmpty) return;
+    accounts.add(Account(server, port, password, method));
   });
   return accounts;
-}
-
-Future<List<Map<String, Object>>> getaccountsbyhtmlstr() async {
-  var htmlstr = await request('https://3.weiwei.in/2020.html');
-  if (htmlstr.isNotEmpty) {
-    var document = parse(htmlstr);
-    var accounts = _documentcallback(document);
-    return accounts;
-  }
-  return [];
 }

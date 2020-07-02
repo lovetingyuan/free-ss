@@ -11,3 +11,13 @@ const guiconfigfilename = 'gui-config.json';
 var _file = File(path.join(ssdir, '_gui-config.default.json'));
 
 var defaultguiconfig = json.decode(_file.readAsStringSync());
+
+class Account {
+  String server;
+  int port;
+  String password;
+  String method;
+  Account (this.server, String port, this.password, this.method) {
+    this.port = int.parse(port);
+  }
+}
