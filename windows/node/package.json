@@ -1,12 +1,12 @@
 {
-  "name": "sstogoogle",
-  "version": "0.0.11",
+  "name": "ssaccounts",
+  "version": "0.0.12",
   "private": true,
   "description": "Help you to visit google.",
   "main": "index.js",
   "scripts": {
     "pkg": "npx pkg accounts.js -t win -o ss.exe",
-    "build": "npx ncc build accounts.js -o ./bin -m"
+    "build": "npx ncc build accounts.js -o ./bin"
   },
   "keywords": [],
   "author": "",

@@ -14,6 +14,10 @@ if (__filename.endsWith('index.js')) {
 }
 
 const defaultGuiConfig = require('../ss/_gui-config.default.json')
+const currentGuiConfigPath = path.resolve(ssdir, 'gui-config.json')
+if (!fs.existsSync(currentGuiConfigPath)) {
+  fs.writeFileSync(currentGuiConfigPath, JSON.stringify(defaultGuiConfig))
+}
 
 if (process.platform !== 'win32') {
   console.warn('Sorry, this program could only run at windows os.')
@@ -62,8 +66,10 @@ function startss() {
   })
 }
 
-const genAccount = ({server, port, password, method}) => {
-  return {
+function writeAccounts(accounts) {
+  // can not use require, because require will be transformed as wrong webpack require
+  const guiConfig = JSON.parse(fs.readFileSync(currentGuiConfigPath, 'utf8'))
+  guiConfig.configs = accounts.map(({ server, port, password, method }) => ({
     "server": server,
     "server_port": port,
     "password": password,
@@ -73,19 +79,8 @@ const genAccount = ({server, port, password, method}) => {
     "plugin_args": "",
     "remarks": "",
     "timeout": 10
-  }
-}
-
-function writeAccounts(accounts) {
-  let guiConfig
-  try {
-    guiConfig = require('./gui-config.json')
-  } catch (err) {
-    guiConfig = defaultGuiConfig
-  }
-  guiConfig.configs = accounts.map(account => genAccount(account))
-  const configPath = path.resolve(ssdir, 'gui-config.json')
-  fs.writeFileSync(configPath, JSON.stringify(guiConfig, null, 2))
+  }))
+  fs.writeFileSync(currentGuiConfigPath, JSON.stringify(guiConfig))
 }
 
 function checkUpdate() {
