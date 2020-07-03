@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "pkg": "npx pkg accounts.js -t win -o ss.exe",
-    "build": "npx ncc build accounts.js -o ./bin"
+    "build": "npx ncc build accounts.js -o ./bin -m"
   },
   "keywords": [],
   "author": "",
