@@ -17,7 +17,15 @@ class Account {
   int port;
   String password;
   String method;
-  Account (this.server, String port, this.password, this.method) {
+  Account(this.server, String port, this.password, this.method) {
     this.port = int.parse(port);
+  }
+  Object toJson() {
+    return {
+      'server': server,
+      'port': port,
+      'password': password,
+      'method': method
+    };
   }
 }

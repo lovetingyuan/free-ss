@@ -95,28 +95,48 @@ function checkUpdate() {
     if (res.version !== pkg.version) {
       notify('💡 有新的版本', false)
     }
-  }).catch(() => {})
+  }).catch(() => { })
 }
 
 function main() {
-  console.log(' 🙂 Please wait...')
+  let filepath
+  if (process.argv[2] === '-o') {
+    filepath = path.resolve(process.cwd(), './ssaccounts.json')
+  }
+  console.log('Please wait...(' + accountsProviders.length + ')')
   checkUpdate()
-  const tasks = accountsProviders.map(provider => {
-    const { url, callback } = provider
-    return got(url + '?_t=' + Date.now(), {
-      headers: {}
-    }).then(res => callback(res.body)).catch(err => [])
+  const getRequest = (url, headers) => {
+    return got(url, { headers }).then(res => res.body)
+  }
+  const tasks = accountsProviders.map((provider, i) => {
+    const accounts = provider(getRequest).catch(err => {
+      console.log(i + ' failed;')
+    })
+    return accounts
   })
-  Promise.all(tasks).then(([accounts1, accounts2]) => {
-    const accounts = accounts1.concat(accounts2)
-    if (!accounts.length) {
-      notify('😔 暂无可用账号')
+  Promise.all(tasks).then((accountsList) => {
+    const accounts = accountsList.reduce((a, b) => a.concat(b), [])
+    if (filepath) {
+      if (!accounts.length) {
+        console.log('Sorry, there are no available accounts for now.')
+      } else {
+        accounts.unshift('严禁用于非法用途，否则一切后果自负')
+        fs.writeFileSync(filepath, JSON.stringify(accounts, null, 2))
+        console.log('Done, accounts saved to ' + filepath)
+      }
     } else {
-      writeAccounts(accounts)
-      startss()
-      console.info('✈️  SS accounts updated!')
-      notify('😊 更新成功:' + accounts.length)
+      if (!accounts.length) {
+        notify('😔 暂无可用账号')
+      } else {
+        writeAccounts(accounts)
+        startss()
+        console.info('SS accounts updated!')
+        notify('😊 更新成功:' + accounts.length)
+      }
     }
+  }).catch(err => {
+    console.log(err)
+    notify('😔 失败')
   })
 }
 

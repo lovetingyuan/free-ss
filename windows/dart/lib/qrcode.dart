@@ -1,5 +1,6 @@
 import 'dart:convert' show utf8, base64Decode;
 import 'request.dart';
+import 'package:html/parser.dart';
 import 'consts.dart';
 
 List<String> _base64callback(String htmlstr) {
@@ -12,8 +13,9 @@ List<String> _base64callback(String htmlstr) {
   return list;
 }
 
-Future<String> _parseqrcode(String base64str) async {
-  var htmlstr = await request('https://zxing.org/w/decode?u=' + Uri.encodeQueryComponent(base64str));
+Future<String> _parseqrcode(String uri) async {
+  var htmlstr = await request(
+      'https://zxing.org/w/decode?u=' + Uri.encodeQueryComponent(uri));
   var exp = RegExp('ss://.+?<', multiLine: true);
   if (exp.hasMatch(htmlstr)) {
     var match = exp.firstMatch(htmlstr);
@@ -22,7 +24,33 @@ Future<String> _parseqrcode(String base64str) async {
   return '';
 }
 
-Future<List<Account>> getaccountsbyqrcode() async {
+Account _parsessprotocol(String ssurl) {
+  var base64 = ssurl.substring('ss://'.length);
+  var parsedstr = utf8.decode(base64Decode(base64)).trim();
+  var parsedlist = parsedstr.split(RegExp('@|:'));
+  if (parsedlist.every((element) => element.isNotEmpty)) {
+    return Account(parsedlist[2], parsedlist[3], parsedlist[1], parsedlist[0]);
+  }
+}
+
+Future<List<Account>> getaccountsbyurlqrcode() async {
+  const url = 'https://my.freeshadowsocks.org/';
+  var htmlstr = await request(url);
+  if (htmlstr.isEmpty) return [];
+  var doc = parse(htmlstr);
+  var results = doc.querySelectorAll('.ss a[href\$=".png"]').map((a) async {
+    var href = a.attributes['href'];
+    if (!href.startsWith('http')) {
+      href = url + (href[0] == '/' ? href.substring(1) : href);
+    }
+    return _parsessprotocol(await _parseqrcode(href));
+  }).toList();
+  return Future.wait(results).then((value) {
+    return value.where((element) => element != null).toList();
+  });
+}
+
+Future<List<Account>> getaccountsbybase64qrcode() async {
   const url = 'https://io.freess.info/';
   final htmlstr = await request(url);
   if (htmlstr.isEmpty) {
@@ -34,13 +62,7 @@ Future<List<Account>> getaccountsbyqrcode() async {
     if (ssurl.isEmpty) {
       return null;
     }
-    var base64 = ssurl.substring('ss://'.length);
-    var parsedstr = utf8.decode(base64Decode(base64)).trim();
-    var parsedlist = parsedstr.split(RegExp('@|:'));
-    if (parsedlist.every((element) => element.isNotEmpty)) {
-      return Account(parsedlist[2], parsedlist[3], parsedlist[1], parsedlist[0]);
-    }
-    return null;
+    return _parsessprotocol(ssurl);
   }).toList();
   return Future.wait(accounts).then((list) {
     return list.where((element) => element != null).toList();

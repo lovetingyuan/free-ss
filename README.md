@@ -13,3 +13,7 @@ For android:
 
 1. Install shadowsocks.apk and ssaccount.apk in `android`.
 2. Use clipboard or file to import the accounts.
+
+Only export accounts to a file?
+
+`node windows/node/bin -o` or `.\windows\dart\bin\ssaccounts.exe -o`

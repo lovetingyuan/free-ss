@@ -1195,13 +1195,6 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/clipboard@^5.25.0":
-  version "5.26.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/clipboard/-/clipboard-5.26.0.tgz#41068d566028fdf0ab48e601646e364c3fe48b2e"
-  integrity sha512-pqleRIUlJY7sKHva3HGTvaQx0hiBfFUph7U44MG0aF0bv4Si93teZCd65ltBL0m3TsrpTIZgNW9cwa4OSxDDbg==
-  dependencies:
-    "@types/cordova" latest
-
 "@ionic-native/core@^5.25.0":
   version "5.26.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/core/-/core-5.26.0.tgz#ba1fc73c4fcc4419e08dc6ed06df48eabad0f56f"
@@ -1209,17 +1202,10 @@
   dependencies:
     "@types/cordova" latest
 
-"@ionic-native/file@^5.25.0":
-  version "5.26.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/file/-/file-5.26.0.tgz#1529a4f5381c74cc866564e9cb26f06158c84826"
-  integrity sha512-sJONMhwEpZtONU59m0Rs6PmzD+C3lcaZkc7TryAXgF+9F6XUjhZu6efis3qzgxWHTMXNr7vBdrzfLAQB5bCGMA==
-  dependencies:
-    "@types/cordova" latest
-
-"@ionic-native/http@^5.25.0":
-  version "5.26.0"
-  resolved "https://registry.yarnpkg.com/@ionic-native/http/-/http-5.26.0.tgz#efaa2e147a645cc4d0c69031e3529e6c4106325c"
-  integrity sha512-j41JvEdOw9Nm/Xze3pzYBqgE9C7+qTvwstb9GJoP6IhwQHf6355UTLER8Vx8EoehDjbUpxzdeVL8dztSeErBiw==
+"@ionic-native/http@^5.27.0":
+  version "5.27.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/http/-/http-5.27.0.tgz#5c1ff13e6dfb7c2c1c73da319fb38370df1ede45"
+  integrity sha512-jbiG9zhy/ODcK5O160YEaN/AweOoxb5aczCibbb/BOLrXurqlNrwNq/VeHB8UKJct0r5qzr+eXqwh/neeJWxTg==
   dependencies:
     "@types/cordova" latest
 
@@ -3344,12 +3330,7 @@ copy-descriptor@^0.1.0:
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
   integrity sha1-Z29us8OZl8LuGsOpJP1hJHSPV40=
 
-cordova-clipboard@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/cordova-clipboard/-/cordova-clipboard-1.3.0.tgz#0911da4cbdea5df2e3a769f5b3aab00e0be0e679"
-  integrity sha512-IGk4LZm/DJ0Xk/jgakHm4wa+A/lrRP3QfzMAHDG7oWLJS4ISOpfI32Wez4ndnENItRslGyBVyJyKD83CxELCAw==
-
-cordova-plugin-advanced-http@^2.4.1:
+cordova-plugin-advanced-http@^2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/cordova-plugin-advanced-http/-/cordova-plugin-advanced-http-2.5.1.tgz#19b73d7c0dc0b2f3b1840a6c80fb15752bbc7a9c"
   integrity sha512-KwCzjVEBpw6OyTjuUYRe9kGuDs1F5IzpsCXASxuIrV+YaXUTbKwU6mIQ+G4iG9Rs5SfPJSEE4ETx3XuP/Hor0Q==

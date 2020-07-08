@@ -1,8 +1,11 @@
 library ssaccounts;
 
+import 'dart:convert';
+
 import 'htmlstr.dart';
 import 'qrcode.dart';
-import 'dart:io' show Platform, sleep;
+import 'dart:io' show Directory, File, Platform, sleep;
+import 'package:path/path.dart' as path;
 import 'notify.dart';
 import 'startss.dart';
 import 'writeaccounts.dart';
@@ -17,19 +20,34 @@ void main(List<String> arguments) async {
   List<Account> allaccounts = [];
   try {
     var accounts = await Future.wait([
-      getaccountsbyqrcode(),
+      getaccountsbybase64qrcode(),
+      getaccountsbyurlqrcode(),
       getaccountsbyhtmlstr()
     ]);
-    allaccounts = accounts[0] + accounts[1];
+    allaccounts = accounts.reduce((value, element) {
+      return value + element;
+    });
   } catch (__) {}
-  if (allaccounts.isEmpty) {
-    notify('失败', '暂无可用账号.');
-    sleep(Duration(seconds: 3));
+  if (arguments.isNotEmpty && arguments[0] == '-o') {
+    if (allaccounts.isNotEmpty) {
+      var current = Directory.current;
+      var file = File(path.join(current.path, 'ssaccounts.json'));
+      file.writeAsStringSync(jsonEncode(allaccounts));
+      print('Done, accounts saved to ${file.path}');
+    } else {
+      print('No available accounts for now.');
+    }
   } else {
-    writeaccounts(allaccounts);
-    startss();
-    notify('成功: ${allaccounts.length}', '现在可以访问Google.');
-    print('完成，可以访问：https://google.com');
-    sleep(Duration(seconds: 1));
+    if (allaccounts.isEmpty) {
+      print('No available accounts for now.');
+      notify('失败', '暂无可用账号.');
+      sleep(Duration(seconds: 3));
+    } else {
+      writeaccounts(allaccounts);
+      startss();
+      notify('成功: ${allaccounts.length}', '现在可以访问Google.');
+      print('完成，可以访问：https://google.com');
+      sleep(Duration(seconds: 1));
+    }
   }
 }
