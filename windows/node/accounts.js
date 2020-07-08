@@ -101,7 +101,7 @@ function checkUpdate() {
 function main() {
   let filepath
   if (process.argv[2] === '-o') {
-    filepath = path.resolve(process.cwd(), './ssaccounts.json')
+    filepath = path.join(global['process']['cwd'](), './ssaccounts.json')
   }
   console.log('Please wait...(' + accountsProviders.length + ')')
   checkUpdate()
