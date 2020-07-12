@@ -115,7 +115,7 @@ function main() {
     return accounts
   })
   Promise.all(tasks).then((accountsList) => {
-    const accounts = accountsList.reduce((a, b) => a.concat(b), [])
+    const accounts = accountsList.reduce((a, b) => a.concat(b), []).filter(Boolean)
     if (filepath) {
       if (!accounts.length) {
         console.log('Sorry, there are no available accounts for now.')
