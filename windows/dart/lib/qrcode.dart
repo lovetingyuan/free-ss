@@ -1,4 +1,4 @@
-import 'dart:convert' show utf8, base64Decode;
+import 'dart:convert' show base64Decode, jsonDecode, jsonEncode, utf8;
 import 'request.dart';
 import 'package:html/parser.dart';
 import 'consts.dart';
@@ -14,21 +14,42 @@ List<String> _base64callback(String htmlstr) {
 }
 
 Future<String> _parseqrcode(String uri) async {
-  var htmlstr = await request(
-      'https://zxing.org/w/decode?u=' + Uri.encodeQueryComponent(uri));
-  var exp = RegExp('ss://.+?<', multiLine: true);
-  if (exp.hasMatch(htmlstr)) {
-    var match = exp.firstMatch(htmlstr);
-    return htmlstr.substring(match.start, match.end - 1);
+  const qrcodeapi = 'https://zxing.org/w/decode?u=';
+  try {
+     var htmlstr = await request(qrcodeapi + Uri.encodeQueryComponent(uri));
+    var exp = RegExp('ss://.+?<', multiLine: true);
+    if (exp.hasMatch(htmlstr)) {
+      var match = exp.firstMatch(htmlstr);
+      return htmlstr.substring(match.start, match.end - 1);
+    }
+  } catch (__) {
+    const qrcodeapi2 = 'http://api.qrserver.com/v1/read-qr-code/?fileurl=';
+    var htmlstr = await request(qrcodeapi2 + Uri.encodeQueryComponent(uri));
+    htmlstr = htmlstr.trim();
+    try {
+      var body = jsonDecode(htmlstr);
+      if (body[0]['symbol'][0]['error'] == null) {
+        return body[0]['symbol'][0]['data'];
+      }
+    } catch (e) {
+      return '';
+    }
   }
   return '';
 }
 
 Account _parsessprotocol(String ssurl) {
+  if (!ssurl.startsWith('ss://')) return null;
   var base64 = ssurl.substring('ss://'.length);
   var parsedstr = utf8.decode(base64Decode(base64)).trim();
   var parsedlist = parsedstr.split(RegExp('@|:'));
   if (parsedlist.every((element) => element.isNotEmpty)) {
+    if (parsedlist[1].contains('\n')) return null;
+    try {
+      int.parse(parsedlist[3]);
+    } catch (__) {
+      return null;
+    }
     return Account(parsedlist[2], parsedlist[3], parsedlist[1], parsedlist[0]);
   }
 }
@@ -68,4 +89,3 @@ Future<List<Account>> getaccountsbybase64qrcode() async {
     return list.where((element) => element != null).toList();
   });
 }
-
