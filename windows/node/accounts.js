@@ -38,11 +38,10 @@ function main() {
   }
   console.log('Please wait...(' + accountsProviders.length + ')')
   const tasks = accountsProviders.map((provider, i) => {
-    const accounts = provider().catch(err => {
-      console.log(i + ' failed;')
+    return provider().catch(err => {
+      console.log((i + 1) + ' failed;')
       return []
     })
-    return accounts
   })
   Promise.all(tasks).then((accountsList) => {
     const accounts = accountsList.reduce((a, b) => a.concat(b), []).filter(Boolean)
@@ -52,7 +51,7 @@ function main() {
       } else {
         accounts.unshift('严禁用于非法用途，否则一切后果自负')
         fs.writeFileSync(filepath, JSON.stringify(accounts, null, 2))
-        console.log('Done, accounts saved to ' + filepath)
+        console.log('Done, ' + (accounts.length - 1) + ' accounts saved to ' + filepath)
       }
     } else {
       if (!accounts.length) {

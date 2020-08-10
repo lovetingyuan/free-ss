@@ -11,9 +11,11 @@ import providers from '../providers'
 import { Plugins, HapticsNotificationType } from '@capacitor/core'; 
 
 const fetchAllAccounts = () => {
-  return Promise.all(providers.map(p => p())).then(accounts => {
-    accounts = accounts.reduce((a, b) => a.concat(b), [])
-    return accounts.map(a => `ss://${btoa(a.method + ':' + a.password)}@${a.server}:${a.port}`)
+  return Promise.all(providers.map(p => {
+    return p().catch(() => [] as Account[])
+  })).then(accounts => {
+    const _accounts = accounts.filter(Boolean).reduce((a, b) => a.concat(b), [])
+    return _accounts.map((a) => `ss://${btoa(a.method + ':' + a.password)}@${a.server}:${a.port}`)
   })
 }
 
@@ -38,6 +40,7 @@ export default {
         })
       }).catch(() => {
         toast('获取账号失败 😟')
+        // @ts-ignore
       }).finally(() => {
         store.loading = false
         buttontext.value = `点击获取账号(${count})`

@@ -1,6 +1,6 @@
 import { HTTP } from '@ionic-native/http'
 import jsQR from 'jsqr'
-import providers from 'providers'
+import providers from 'free-ss-providers'
 
 export const getRequest = (url: string, headers?: any): Promise<string> => {
   const _url = new URL(url)

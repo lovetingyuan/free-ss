@@ -5,9 +5,9 @@ declare interface Account {
   method: string
 }
 
-declare module "providers" {
+declare module "free-ss-providers" {
   interface Providers {
-    (a: Function, b: (html: string) => Document, c: (url: string) => Promise<string>): (() => Promise<Account>)[]
+    (a: Function, b: (html: string) => Document, c: (url: string) => Promise<string>): (() => Promise<Account[]>)[]
   }
   const providers: Providers
   export default providers

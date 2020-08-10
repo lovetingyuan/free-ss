@@ -19,9 +19,7 @@ export default {
 <style scoped>
   .button {
     cursor: pointer;
-    /* display: inline-block; */
     margin: 0 auto;
-    /* box-sizing: border-box; */
     text-align: center;
     border-radius: 1000px;
     color: white;
@@ -39,7 +37,7 @@ export default {
     padding: 15px 30px;
   }
   .button--disabled {
-    opacity: .6;
+    opacity: .65;
     pointer-events: none;
   }
 </style>

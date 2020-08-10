@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts">
-import animationData from '../assets/animation.json'
+// @ts-ignore
+import animationData from '../assets/animation.json' // why ts error here?
 import lottie from 'lottie-web'
 import { ref, onMounted } from 'vue'
 

@@ -8,7 +8,6 @@
       <copy-button></copy-button>
     </section>
     <SsButton></SsButton>
-    <br>
   </main>
 </template>
 
@@ -27,13 +26,14 @@ export default {
   },
 }
 </script>
-`
+
 <style scoped>
   main {
     text-align: center;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
+    user-select: none;
   }
 </style>
