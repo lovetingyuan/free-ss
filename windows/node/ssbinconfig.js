@@ -13,12 +13,12 @@ module.exports = {
     const currentGuiConfigPath = path.resolve(ssdir, 'gui-config.json')
     let guiConfig = defaultGuiConfig
     if (!fs.existsSync(currentGuiConfigPath)) {
-      fs.writeFileSync(currentGuiConfigPath, JSON.stringify(defaultGuiConfig))
+      fs.writeFileSync(currentGuiConfigPath, JSON.stringify(defaultGuiConfig, null, 2))
     } else {
       guiConfig = JSON.parse(fs.readFileSync(currentGuiConfigPath, 'utf8'))
     }
     const newConfig = callback(guiConfig)
-    fs.writeFileSync(currentGuiConfigPath, JSON.stringify(newConfig))
+    fs.writeFileSync(currentGuiConfigPath, JSON.stringify(newConfig, null, 2))
   },
   getSSBinInfo () {
     const SS = fs.readdirSync(ssdir).find(v => v.startsWith('Shadowsocks') && v.endsWith('.exe'))

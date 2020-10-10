@@ -8,10 +8,6 @@ module.exports = function startss(accounts) {
       "server_port": port,
       "password": password,
       "method": method,
-      "plugin": "",
-      "plugin_opts": "",
-      "plugin_args": "",
-      "remarks": "",
       "timeout": 10
     }))
     return config
