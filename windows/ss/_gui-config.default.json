@@ -1,27 +1,36 @@
 {
-  "version": "4.2.0.1",
+  "version": "4.3.1.0",
   "configs": [],
+  "onlineConfigSource": [],
   "strategy": "com.shadowsocks.strategy.ha",
   "index": -1,
   "global": false,
   "enabled": true,
   "shareOverLan": false,
-  "isDefault": false,
-  "localPort": 1888,
+  "firstRun": false,
+  "localPort": 1080,
   "portableMode": true,
   "showPluginOutput": false,
   "pacUrl": null,
   "useOnlinePac": false,
   "secureLocalPac": true,
-  "availabilityStatistics": false,
+  "regeneratePacOnUpdate": true,
   "autoCheckUpdate": true,
   "checkPreRelease": false,
+  "skippedUpdateVersion": "",
   "isVerboseLogging": false,
   "isIPv6Enabled": false,
   "generateLegacyUrl": false,
   "geositeUrl": null,
-  "geositeGroup": "geolocation-!cn",
-  "geositeBlacklistMode": true,
+  "geositeDirectGroups": [
+    "cn",
+    "geolocation-!cn@cn"
+  ],
+  "geositeProxiedGroups": [
+    "geolocation-!cn"
+  ],
+  "geositePreferDirect": false,
+  "userAgent": "ShadowsocksWindows/$version",
   "logViewer": {
     "topMost": false,
     "wrapText": false,
@@ -48,5 +57,11 @@
     "ServerMoveUp": "",
     "ServerMoveDown": "",
     "RegHotkeysAtStartup": false
+  },
+  "WebProxy": {
+    "_BypassOnLocal": false,
+    "_ProxyAddress": "http://127.0.0.1:1080",
+    "_BypassList": null,
+    "_UseDefaultCredentials": false
   }
 }
