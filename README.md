@@ -4,10 +4,9 @@ Only for windows and android user.
 
 For windows:
 
-* If you do not [install `Nodejs`](https://nodejs.org/en/), click `windows/goss.cmd`.
-* If you have nodejs installed, click `windows/start.cmd`.
+* Please install [`nodejs`](https://nodejs.org/) first, then click `windows/start.cmd`.
 
-BTW: you can set `start.cmd` or `goss.cmd` as desktop shortcut.
+BTW: you can set `start.cmd` as a desktop shortcut.
 
 For android:
 
@@ -16,4 +15,4 @@ For android:
 
 Only export accounts to a file?
 
-`node windows/node/bin -o` or `.\windows\dart\bin\ssaccounts.exe -o`
+`node windows/node/bin -o`
