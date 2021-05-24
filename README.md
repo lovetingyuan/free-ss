@@ -2,6 +2,9 @@
 
 Only for windows and android user.
 
+[Online](https://replit.com/@lovetingyuan/freess#index.js)
+
+
 For windows:
 
 * Please install [`nodejs`](https://nodejs.org/) first, then click `windows/start.cmd`.
