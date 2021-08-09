@@ -1,5 +1,8 @@
 ### Help you to use google, that is all.
 
+see https://bulink.me/sub/mn2fa/ss
+
+
 Only for windows and android user.
 
 Copy [Online](https://replit.com/@lovetingyuan/freess#index.js)
