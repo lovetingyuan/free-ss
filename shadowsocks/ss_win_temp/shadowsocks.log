@@ -1,0 +1,86 @@
+2021-06-12 00:56:41.8205|INFO|Shadowsocks.Controller.I18N|Current language is: zh-CN
+2021-06-12 00:56:42.3427|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-06-12 00:56:42.9192|WARN|Shadowsocks.Controller.ShadowsocksController|System.Exception: 端口 1080 已被占用
+   在 Shadowsocks.Controller.Listener.Start(Configuration config)
+   在 Shadowsocks.Controller.ShadowsocksController.Reload()
+2021-06-12 01:00:54.7193|INFO|Shadowsocks.Controller.I18N|Current language is: zh-CN
+2021-06-12 01:00:55.0929|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-06-12 01:00:55.4173|WARN|Shadowsocks.Controller.ShadowsocksController|System.Exception: 端口 1080 已被占用
+   在 Shadowsocks.Controller.Listener.Start(Configuration config)
+   在 Shadowsocks.Controller.ShadowsocksController.Reload()
+2021-06-12 01:01:07.8340|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-06-12 01:01:07.9766|WARN|Shadowsocks.Controller.ShadowsocksController|System.Exception: 端口 1080 已被占用
+   在 Shadowsocks.Controller.Listener.Start(Configuration config)
+   在 Shadowsocks.Controller.ShadowsocksController.Reload()
+2021-06-12 01:01:32.1264|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-06-12 01:01:32.2749|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:00:13.6770|INFO|Shadowsocks.Controller.I18N|Current language is: zh-CN
+2021-08-14 23:00:14.7395|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:00:15.1255|WARN|Shadowsocks.Controller.ShadowsocksController|System.Exception: 端口 1081 是系统保留端口 ---> System.Net.Sockets.SocketException: 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+   在 System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   在 System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   在 Shadowsocks.Controller.Listener.Start(Configuration config)
+   在 Shadowsocks.Controller.ShadowsocksController.Reload()
+   --- 内部异常堆栈跟踪的结尾 ---
+2021-08-14 23:00:18.7811|ERROR|Shadowsocks.Program|System.NullReferenceException: 未将对象引用设置到对象的实例。
+   在 Shadowsocks.Controller.HotkeyReg.RegAllHotkeys()
+   在 Shadowsocks.Controller.ShadowsocksController.Start(Boolean systemWakeUp)
+   在 Shadowsocks.Program.Main(String[] args)
+2021-08-14 23:01:06.8181|INFO|Shadowsocks.Controller.I18N|Current language is: zh-CN
+2021-08-14 23:01:07.3261|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:01:07.6581|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:01:17.9828|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:01:18.1535|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:01:32.9269|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:01:33.0882|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:01:40.5963|INFO|Shadowsocks.Controller.ProtocolHandler|Successfully added ss:// association.
+2021-08-14 23:01:51.5602|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:01:51.7293|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:01:58.5627|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:01:58.7096|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:01:58.9526|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:01:59.1556|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:39:20.2765|INFO|Shadowsocks.Controller.I18N|Current language is: zh-CN
+2021-08-14 23:39:20.5525|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:39:20.9475|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:39:31.3273|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:39:31.5283|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:47:23.8803|INFO|Shadowsocks.Controller.I18N|Current language is: zh-CN
+2021-08-14 23:47:24.7433|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:47:25.1783|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:47:35.7125|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:47:35.8774|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:51:34.7943|INFO|Shadowsocks.Controller.I18N|Current language is: zh-CN
+2021-08-14 23:51:35.3733|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:51:35.6283|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:51:46.1865|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:51:46.3695|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-14 23:59:51.1775|INFO|Shadowsocks.Controller.I18N|Current language is: zh-CN
+2021-08-14 23:59:51.6880|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-14 23:59:51.9750|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-15 00:00:02.5579|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-15 00:00:02.7539|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-15 00:02:35.3981|INFO|Shadowsocks.Controller.I18N|Current language is: zh-CN
+2021-08-15 00:02:35.9171|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-15 00:02:36.1830|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-15 00:02:46.6961|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-15 00:02:46.8477|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-15 00:02:55.3395|INFO|Shadowsocks.Controller.I18N|Current language is: zh-CN
+2021-08-15 00:02:55.5885|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-15 00:02:55.8155|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-15 00:03:06.1433|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-15 00:03:06.2900|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-15 00:03:08.7931|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-15 00:03:08.9333|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-15 00:03:09.1783|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-15 00:03:09.3883|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-15 00:03:20.5327|INFO|Shadowsocks.Controller.TCPHandler|github.com/freefq - 欧洲  5 (138.199.19.182:50168) timed out
+2021-08-15 00:03:24.2289|INFO|Shadowsocks.Controller.TCPHandler|github.com/freefq - 欧洲  5 (138.199.19.182:50168) timed out
+2021-08-15 00:03:29.5258|INFO|Shadowsocks.Controller.TCPHandler|github.com/freefq - 欧洲  5 (138.199.19.182:50168) timed out
+2021-08-15 00:03:31.8055|INFO|Shadowsocks.Controller.TCPHandler|github.com/freefq - 欧洲  5 (138.199.19.182:50168) timed out
+2021-08-15 00:03:34.2476|INFO|Shadowsocks.Controller.TCPHandler|github.com/freefq - 欧洲  5 (138.199.19.182:50168) timed out
+2021-08-15 00:05:59.2782|INFO|Shadowsocks.Controller.I18N|Current language is: zh-CN
+2021-08-15 00:05:59.5251|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-15 00:05:59.7483|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)
+2021-08-15 00:06:10.0353|INFO|Shadowsocks.Controller.ShadowsocksController|WPF Localization Extension|Current culture: zh-CN
+2021-08-15 00:06:10.1932|INFO|Shadowsocks.Controller.Listener|Shadowsocks started (4.4.0.0)

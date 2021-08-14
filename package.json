@@ -1,0 +1,24 @@
+{
+  "name": "free-ss",
+  "version": "1.0.0",
+  "description": "Only for windows and android user.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lovetingyuan/fq.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lovetingyuan/fq/issues"
+  },
+  "homepage": "https://github.com/lovetingyuan/fq#readme",
+  "dependencies": {
+    "clipboardy": "^2.3.0",
+    "node-fetch": "^2.6.1"
+  }
+}

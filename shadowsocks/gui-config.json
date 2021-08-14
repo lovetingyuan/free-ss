@@ -1,0 +1,169 @@
+{
+  "version": "4.4.0.0",
+  "configs": [
+    {
+      "server": "138.199.19.182",
+      "server_port": 50168,
+      "password": "WCuz7yrfZSCQQXSNrtGPz2HT",
+      "method": "aes-256-gcm",
+      "remarks": "github.com/freefq - 欧洲  5",
+      "timeout": 10,
+      "warnLegacyUrl": false
+    },
+    {
+      "server": "194.37.98.211",
+      "server_port": 38742,
+      "password": "DKXfWwc4ebscpXTKpbt85rSH",
+      "method": "aes-256-gcm",
+      "remarks": "github.com/freefq - 罗马尼亚  15",
+      "timeout": 10,
+      "warnLegacyUrl": false
+    },
+    {
+      "server": "5.189.202.16",
+      "server_port": 41738,
+      "password": "X6yMGXnfUsuKTvEDYZSLPk4d",
+      "method": "aes-256-gcm",
+      "remarks": "github.com/freefq - 俄罗斯  17",
+      "timeout": 10,
+      "warnLegacyUrl": false
+    },
+    {
+      "server": "84.17.53.210",
+      "server_port": 50168,
+      "password": "WCuz7yrfZSCQQXSNrtGPz2HT",
+      "method": "aes-256-gcm",
+      "remarks": "github.com/freefq - 香港CDN77节点 19",
+      "timeout": 10,
+      "warnLegacyUrl": false
+    },
+    {
+      "server": "37.19.220.196",
+      "server_port": 49514,
+      "password": "dpGjA4GkzV28QPDYzEp94cTe",
+      "method": "aes-256-gcm",
+      "remarks": "github.com/freefq - 乌克兰  21",
+      "timeout": 10,
+      "warnLegacyUrl": false
+    },
+    {
+      "server": "138.199.19.162",
+      "server_port": 50168,
+      "password": "WCuz7yrfZSCQQXSNrtGPz2HT",
+      "method": "aes-256-gcm",
+      "remarks": "github.com/freefq - 欧洲  22",
+      "timeout": 10,
+      "warnLegacyUrl": false
+    },
+    {
+      "server": "138.199.16.137",
+      "server_port": 40093,
+      "password": "x23Z4LGkGDkThZ9Kaz4DURQp",
+      "method": "aes-256-gcm",
+      "remarks": "github.com/freefq - 欧洲  23",
+      "timeout": 10,
+      "warnLegacyUrl": false
+    },
+    {
+      "server": "143.244.57.99",
+      "server_port": 44745,
+      "password": "fyXdw87yCH9SAmFkPvsvLVqC",
+      "method": "aes-256-gcm",
+      "remarks": "github.com/freefq - 美国  25",
+      "timeout": 10,
+      "warnLegacyUrl": false
+    },
+    {
+      "server": "5.189.202.16",
+      "server_port": 44745,
+      "password": "fyXdw87yCH9SAmFkPvsvLVqC",
+      "method": "aes-256-gcm",
+      "remarks": "github.com/freefq - 俄罗斯  26",
+      "timeout": 10,
+      "warnLegacyUrl": false
+    },
+    {
+      "server": "89.187.163.210",
+      "server_port": 35294,
+      "password": "J9Y2ncrdPEC38gwydNFFGBna",
+      "method": "aes-256-gcm",
+      "remarks": "github.com/freefq - 新加坡CDN77节点 33",
+      "timeout": 10,
+      "warnLegacyUrl": false
+    },
+    {
+      "server": "143.244.56.230",
+      "server_port": 31572,
+      "password": "n8w4StnbVD9dmXYn4Ajt87EA",
+      "method": "aes-256-gcm",
+      "remarks": "github.com/freefq - 美国  38",
+      "timeout": 10,
+      "warnLegacyUrl": false
+    }
+  ],
+  "onlineConfigSource": [],
+  "strategy": "",
+  "index": 0,
+  "global": false,
+  "enabled": true,
+  "shareOverLan": false,
+  "firstRun": false,
+  "localPort": 1080,
+  "portableMode": true,
+  "showPluginOutput": false,
+  "pacUrl": "",
+  "useOnlinePac": false,
+  "secureLocalPac": true,
+  "regeneratePacOnUpdate": true,
+  "autoCheckUpdate": false,
+  "checkPreRelease": false,
+  "skippedUpdateVersion": "",
+  "isVerboseLogging": false,
+  "isIPv6Enabled": false,
+  "generateLegacyUrl": false,
+  "geositeUrl": "",
+  "geositeSha256sumUrl": "",
+  "geositeDirectGroups": [
+    "private",
+    "cn",
+    "geolocation-!cn@cn"
+  ],
+  "geositeProxiedGroups": [
+    "geolocation-!cn"
+  ],
+  "geositePreferDirect": false,
+  "userAgent": "ShadowsocksWindows/$version",
+  "logViewer": {
+    "topMost": false,
+    "wrapText": false,
+    "toolbarShown": false,
+    "Font": "Consolas, 8pt",
+    "BackgroundColor": "Black",
+    "TextColor": "White"
+  },
+  "proxy": {
+    "useProxy": false,
+    "proxyType": 0,
+    "proxyServer": "",
+    "proxyPort": 0,
+    "proxyTimeout": 3,
+    "useAuth": false,
+    "authUser": "",
+    "authPwd": ""
+  },
+  "hotkey": {
+    "SwitchSystemProxy": "",
+    "SwitchSystemProxyMode": "",
+    "SwitchAllowLan": "",
+    "ShowLogs": "",
+    "ServerMoveUp": "",
+    "ServerMoveDown": "",
+    "RegHotkeysAtStartup": false
+  },
+  "WebProxy": {
+    "_BypassOnLocal": false,
+    "_ProxyAddress": "http://127.0.0.1:1080",
+    "_BypassList": null,
+    "_UseDefaultCredentials": false
+  }
+}

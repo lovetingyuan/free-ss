@@ -1,3 +1,0 @@
-node node/bin/
-
-exit

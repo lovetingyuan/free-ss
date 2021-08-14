@@ -1,7 +1,0 @@
-{
-  "name": "vite-test",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "custom"
-}
