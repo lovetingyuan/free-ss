@@ -1,0 +1,3 @@
+node ./index
+
+pause
