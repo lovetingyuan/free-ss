@@ -61,7 +61,9 @@ function restartClient() {
 
 function fetchAccounts() {
   console.log('start fetching accounts...')
-  return fetch('https://raw.fastgit.org/freefq/free/master/v2').then(res => res.text()).then(r => {
+  return fetch('https://bulink.me/sub/mn2fa/ss').then(r => r.text()).catch(() => {
+    return fetch('https://raw.fastgit.org/freefq/free/master/v2').then(r => r.text())
+  }).then(r => {
     const str = atob(r)
     const ssAccounts = str.split('\n').filter(a => a.startsWith('ss://'))
     if (!ssAccounts.length) {
