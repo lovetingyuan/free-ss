@@ -2,4 +2,7 @@ node_modules/
 .vscode/
 ss_win_temp
 gui-config.json
-pac.txt
+*.config
+*.txt
+*.log
+
