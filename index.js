@@ -28,19 +28,32 @@ function updateAccounts(accounts) {
   const configFile = path.resolve(__dirname, 'shadowsocks', 'gui-config.json')
   if (!fs.existsSync(configFile)) {
     console.log('no shadowsocks config file, please run ss first.')
+    restartClient(true)
+  } else {
+    const config = require(configFile)
+    config.configs = accounts;
+    config.enabled = true
+    console.log('updating ss config...')
+    fs.writeFileSync(configFile, JSON.stringify(config, null, 2))
     restartClient()
-    process.exit(0)
   }
-  const config = require(configFile)
-  config.configs = accounts;
-  config.enabled = true
-  console.log('updating ss config...')
-  fs.writeFileSync(configFile, JSON.stringify(config, null, 2))
 }
 
-function restartClient() {
+function restartClient(first) {
+  if (process.platform !== 'win32') {
+    console.log('only support windows currently.')
+    return
+  }
   const ssbinName = 'Shadowsocks.exe'
   const ssbinPath = path.resolve(__dirname, 'shadowsocks', ssbinName)
+  if (first) {
+    childProcess.spawn(ssbinPath, {
+      detached: true
+    })
+    setTimeout(() => {
+      process.exit(0) 
+    });
+  }
   const ret = childProcess.execSync(`tasklist /FI "IMAGENAME eq ${ssbinName}" /FO csv /NH`).toString('utf8')
   if (ret.includes(ssbinName)) {
     console.log('closing current client...')
@@ -78,8 +91,6 @@ function fetchAccounts() {
 function main () {
   return fetchAccounts().then(accounts => {
     return updateAccounts(accounts)
-  }).then(() => {
-    return restartClient()
   }).then(() => {
     console.log('done!')
     process.exit(0)
