@@ -4,6 +4,7 @@ const clipboardy = require('clipboardy');
 const childProcess = require('child_process')
 const path = require('path')
 const fs = require('fs')
+const others = require('./others')
 
 const atob = (a) => {
   return Buffer.from(a, 'base64').toString('utf-8');
@@ -73,20 +74,22 @@ function restartClient(first) {
   })
 }
 
-function fetchAccounts() {
+async function fetchAccounts() {
   console.log('start fetching accounts...')
-  return fetch('https://raw.fastgit.org/freev2/free/main/v2').then(res => res.text()).then(r => {
-    const str = atob(r)
-    const ssAccounts = str.split('\n').filter(a => a.startsWith('ss://'))
-    if (!ssAccounts.length) {
+  const r = await fetch('https://raw.fastgit.org/freev2/free/main/v2').then(r => r.text())
+  const str = atob(r)
+  const ssAccounts = str.split('\n').filter(a => a.startsWith('ss://'))
+  if (!ssAccounts.length) {
+    const _others = await others()
+    if (_others.length) {
+      ssAccounts.push(..._others)
+    } else {
       return console.log('No avaliable accounts.')
     }
-    console.log(`fetched ${ssAccounts.length} accounts.`)
-    clipboardy.writeSync(ssAccounts.join('\n'));
-    return ssAccounts.map(parseSSUrl)
-  }).catch(e => {
-    console.warn('failed to fetch accounts, ' + e.message)
-  })
+  }
+  console.log(`fetched ${ssAccounts.length} accounts.`)
+  clipboardy.writeSync(ssAccounts.join('\n'));
+  return ssAccounts.map(parseSSUrl)
 }
 
 function main () {
