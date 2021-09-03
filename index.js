@@ -1,3 +1,4 @@
+#! /usr/bin/node
 const fetch = require('node-fetch')
 const clipboardy = require('clipboardy');
 const childProcess = require('child_process')
@@ -74,7 +75,7 @@ function restartClient(first) {
 
 function fetchAccounts() {
   console.log('start fetching accounts...')
-  return fetch('https://raw.fastgit.org/freefq/free/master/v2').then(res => res.text()).then(r => {
+  return fetch('https://raw.fastgit.org/freev2/free/main/v2').then(res => res.text()).then(r => {
     const str = atob(r)
     const ssAccounts = str.split('\n').filter(a => a.startsWith('ss://'))
     if (!ssAccounts.length) {
