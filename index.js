@@ -76,8 +76,14 @@ function restartClient(first) {
 
 async function fetchAccounts() {
   console.log('start fetching accounts...')
-  const r = await fetch('https://raw.fastgit.org/freev2/free/main/v2').then(r => r.text())
-  const str = atob(r)
+  const request = url => {
+    return fetch(url).then(r => r.text()).catch(() => '')
+  }
+  let r = await request('https://raw.fastgit.org/freefq/free/master/v2')
+  if (!r) {
+    r = await request('https://raw.fastgit.org/freev2/free/main/v2')
+  }
+  const str = atob(r || '')
   const ssAccounts = str.split('\n').filter(a => a.startsWith('ss://'))
   if (!ssAccounts.length) {
     const _others = await others()
