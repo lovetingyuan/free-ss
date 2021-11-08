@@ -2,7 +2,10 @@ const fetch = require('node-fetch')
 const clipboardy = require('clipboardy');
 const childProcess = require('child_process')
 const path = require('path')
+const { createDocument } = require('domino')
 const fs = require('fs')
+
+// const others = require('./other')
 const ssDir = path.resolve(__dirname, 'shadowsocks')
 
 const atob = (a) => {
@@ -15,18 +18,25 @@ const request = url => {
   })
 }
 
-function parseSSUrl (url) {
-  url = url.slice('ss://'.length)
-  const [mp, sp, remarks] = url.split(/@|#/)
-  const [method, password] = atob(mp).split(':')
-  const [server, port] = sp.split(':')
+function getAccount (url) {
+  let method, password, server, port, remarks
+  if (typeof url === 'string') {
+    url = url.slice('ss://'.length)
+    const [mp, sp, _remarks = ''] = url.split(/@|#/);
+    [method, password] = atob(mp).split(':');
+    [server, port] = sp.split(':')
+    remarks = _remarks
+  } else {
+    ({ method, password, server, port, remarks } = url)
+  }
+
   return {
     server,
     server_port: Number(port),
     password,
     method,
     remarks: decodeURIComponent(remarks),
-    timeout: 10,
+    timeout: 20,
     warnLegacyUrl: false
   }
 }
@@ -39,12 +49,13 @@ function updateAccounts(accounts) {
     setTimeout(() => {
       process.exit(0) 
     });
+  } else {
+    const config = require(configFile)
+    config.configs = accounts;
+    config.enabled = true
+    console.log('updating ss config...')
+    fs.writeFileSync(configFile, JSON.stringify(config, null, 2))
   }
-  const config = require(configFile)
-  config.configs = accounts;
-  config.enabled = true
-  console.log('updating ss config...')
-  fs.writeFileSync(configFile, JSON.stringify(config, null, 2))
 }
 
 function restartClient() {
@@ -72,29 +83,37 @@ function restartClient() {
 
 function fetchAccounts() {
   console.log('start fetching accounts...')
-  return request('https://raw.fastgit.org/freefq/free/master/v2').catch(() => {
-    return request('https://bulink.me/sub/mn2fa/ss')
-  }).then(r => {
+  const task1 = request('https://raw.fastgit.org/freefq/free/master/v2').then(r => {
     const str = atob(r)
     const ssAccounts = str.split('\n').filter(a => a.startsWith('ss://'))
-    if (!ssAccounts.length) {
-      return Promise.reject(new Error('no available accounts.'))
-    }
-    console.log(`fetched ${ssAccounts.length} accounts.`)
-    clipboardy.writeSync(ssAccounts.join('\n'));
-    return ssAccounts.map(parseSSUrl)
+    // clipboardy.writeSync(ssAccounts.join('\n'));
+    return ssAccounts.map(getAccount)
   })
+  const task2 = request('https://3.weiwei.in/2020.html').then(htmlStr => {
+    if (!htmlStr) return []
+    const doc = createDocument(htmlStr)
+    return Array.from(doc.querySelectorAll('table tr')).map(tr => {
+      const tds = Array.from(tr.querySelectorAll('td'))
+      if (tds.length < 4) return
+      const [server, port, method, password] = tds.slice(0, 4).map(td => td.textContent.trim())
+      return getAccount({server, port, method, password, remarks: 'weiwei.in'})
+    }).filter(Boolean)
+  })
+  return Promise.all([task1, task2]).then(([a, b]) => a.concat(b))
 }
 
 function main () {
   return fetchAccounts().then(accounts => {
     if (accounts) {
+      console.log(`fetched ${accounts.length} accounts.`)
       updateAccounts(accounts)
       restartClient()
       console.log('done, quit after 3 seconds.')
       setTimeout(() => {
         process.exit(0)
       }, 3000)
+    } else {
+      return Promise.reject(new Error('no availabel accounts'))
     }
   }).catch(err => {
     const msg = err instanceof Error ? err.message : (err ? err.toString() : 'unknown reason.')
