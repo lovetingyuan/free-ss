@@ -1,11 +1,10 @@
 const fetch = require('node-fetch')
-const clipboardy = require('clipboardy');
+// const clipboardy = require('clipboardy');
 const childProcess = require('child_process')
 const path = require('path')
 const { createDocument } = require('domino')
 const fs = require('fs')
 
-// const others = require('./other')
 const ssDir = path.resolve(__dirname, 'shadowsocks')
 
 const atob = (a) => {
