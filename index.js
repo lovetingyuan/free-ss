@@ -1,3 +1,4 @@
+#! /usr/bin/node
 const fetch = require('node-fetch')
 // const clipboardy = require('clipboardy');
 const childProcess = require('child_process')
@@ -57,7 +58,11 @@ function updateAccounts(accounts) {
   }
 }
 
-function restartClient() {
+function restartClient(first) {
+  if (process.platform !== 'win32') {
+    console.log('only support windows currently.')
+    return
+  }
   const ssbinName = 'Shadowsocks.exe'
   const ssbinPath = path.resolve(ssDir, ssbinName)
   const ret = childProcess.execSync(`tasklist /FI "IMAGENAME eq ${ssbinName}" /FO csv /NH`).toString('utf8')
@@ -80,7 +85,7 @@ function restartClient() {
   })
 }
 
-function fetchAccounts() {
+async function fetchAccounts() {
   console.log('start fetching accounts...')
   const task1 = request('https://raw.fastgit.org/freefq/free/master/v2').then(r => {
     const str = atob(r)
