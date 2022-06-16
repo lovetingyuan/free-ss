@@ -86,12 +86,15 @@ function restartClient(first) {
   });
 }
 
+const ssUrls = [];
+
 async function fetchAccounts() {
   console.log('start fetching accounts...');
   const task1 = request('https://raw.fastgit.org/freefq/free/master/v2').then(r => {
     const str = atob(r);
     const ssAccounts = str.split('\n').filter(a => a.startsWith('ss://'));
     // clipboardy.writeSync(ssAccounts.join('\n'));
+    ssUrls.push(...ssAccounts);
     return ssAccounts.map(getAccount);
   });
   const task2 = request('https://3.weiwei.in/2020.html').then(htmlStr => {
@@ -106,13 +109,21 @@ async function fetchAccounts() {
       })
       .filter(Boolean);
   });
-  return Promise.all([task1, task2]).then(([a, b]) => a.concat(b));
+  return Promise.allSettled([task1, task2]);
 }
 
 function main() {
   return fetchAccounts()
-    .then(accounts => {
-      if (accounts) {
+    .then(result => {
+      let accounts = [];
+      for (let ret of result) {
+        if (ret.status === 'fulfilled') {
+          accounts = accounts.concat(ret.value);
+        } else {
+          console.error(ret.reason.message);
+        }
+      }
+      if (accounts.length) {
         console.log(`fetched ${accounts.length} accounts.`);
         updateAccounts(accounts);
         restartClient();
@@ -127,6 +138,9 @@ function main() {
     .catch(err => {
       const msg = err instanceof Error ? err.message : err ? err.toString() : 'unknown reason.';
       console.error('failed, ' + msg);
+      setTimeout(() => {
+        process.exit(0);
+      }, 3000);
     });
 }
 
