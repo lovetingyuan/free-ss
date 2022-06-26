@@ -21,7 +21,7 @@
     "clipboardy": "^2.3.0",
     "domino": "^2.1.6",
     "jsqr": "^1.4.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "pngjs": "^6.0.0"
   }
 }
