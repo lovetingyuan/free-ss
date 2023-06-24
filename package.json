@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/lovetingyuan/fq#readme",
   "dependencies": {
-    "clipboardy": "^2.3.0",
+    "clipboardy": "^3.0.0",
     "domino": "^2.1.6",
     "jsqr": "^1.4.0",
     "node-fetch": "^2.6.1",
